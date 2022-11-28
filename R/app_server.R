@@ -12,7 +12,7 @@
 
 app_server <- function(input, output, session) {
 
-  parsed_bike_data = parse_bike_data(recalculate = T)
+  parsed_bike_data = parse_bike_data(recalculate = F)
 
   output$plotly_perstation = renderPlotly({
     scatter_stats_plotly(data = parsed_bike_data,

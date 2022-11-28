@@ -1,5 +1,4 @@
 
-#library(wesanderson)
 #library(lubridate)
 #library(dplyr)
 #library(wesanderson)
@@ -7,8 +6,20 @@
 #library(leaflet)
 
 
-wes_colors = c(wes_palettes$GrandBudapest1,wes_palettes$GrandBudapest2,wes_palettes$Zissou1,wes_palettes$Rushmore)
-###
+
+default_colors = function(default = T){
+  if(default==F){
+    default_colors = c(wes_palettes$GrandBudapest1,wes_palettes$GrandBudapest2,wes_palettes$Zissou1,wes_palettes$Rushmore)
+  }
+
+    ###
+  if(default==T){
+    default_colors = colors()[1:18]
+  }
+  default_colors
+}
+
+
 
 #' read data
 #'
