@@ -1,9 +1,10 @@
 
-library(wesanderson)
-library(lubridate)
-library(dplyr)
-library(wesanderson)
-library(plotly)
+#library(wesanderson)
+#library(lubridate)
+#library(dplyr)
+#library(wesanderson)
+#library(plotly)
+#library(leaflet)
 
 
 wes_colors = c(wes_palettes$GrandBudapest1,wes_palettes$GrandBudapest2,wes_palettes$Zissou1,wes_palettes$Rushmore)
@@ -348,4 +349,7 @@ scatter_stats_plotly = function(data = parsed_bike_data,stations="Saint-Laurent/
 
 }
 
+dummy_plot = function(){
+  hist(rnorm(1000))
 
+}

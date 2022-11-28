@@ -43,6 +43,8 @@ app_server <- function(input, output, session) {
                  label = lapply(parsed_bike_data[[3]]$labels,HTML))
   })
 
+output$mymap2 = renderPlot({dummy_plot()})
+
 
   output$general =
     output$clinical <- renderUI({

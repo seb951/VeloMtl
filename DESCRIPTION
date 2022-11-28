@@ -1,17 +1,20 @@
 Package: VeloMtl
 Title: An Amazing Shiny App
-Version: 0.0.0.9000
+Version: 0.9
 Authors@R: 
-    person(given = "firstname",
-           family = "lastname",
-           role = c("aut", "cre"),
-           email = "your@email.com")
+    person("Sebastien", "Renaut", , "sebastien.renaut@email.com", role = c("aut", "cre"))
 Description: What the package does (one paragraph).
 License: What license is it under?
 Imports: 
     config (>= 0.3.1),
+    dplyr,
     golem (>= 0.3.5),
-    shiny (>= 1.7.2)
+    lubridate,
+    pkgload,
+    plotly,
+    shiny (>= 1.7.2),
+    shinythemes,
+    wesanderson
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.2

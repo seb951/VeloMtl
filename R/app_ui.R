@@ -7,8 +7,8 @@
 #' @import dplyr
 #' @import wesanderson
 #' @import plotly
-#' @import shinythemes
 #' @import leaflet
+#' @import shinythemes
 #' @noRd
 
 app_ui = function(request){
@@ -21,7 +21,8 @@ app_ui = function(request){
                         icon = icon("map-pin"),
                         mainPanel("",
                                   width = 12,
-                                  leafletOutput("mymap",width = 1000, height=600))
+                                  leafletOutput("mymap",width = 1000, height=600)
+                                  )
                ),
                tabPanel("Vélo",
                         icon = icon("bicycle"),
@@ -81,7 +82,7 @@ app_ui = function(request){
 #' resources inside the Shiny application.
 #'
 #' @import shiny
-#' @importFrom golem add_resource_path activate_js favicon bundle_resources
+#' @importFrom golem add_resource_path activate_js use_favicon favicon bundle_resources
 #' @noRd
 golem_add_external_resources <- function() {
   add_resource_path(
@@ -90,7 +91,8 @@ golem_add_external_resources <- function() {
   )
 
   tags$head(
-    favicon(),
+    favicon()
+,
     bundle_resources(
       path = app_sys("app/www"),
       app_title = "VeloMtl"
