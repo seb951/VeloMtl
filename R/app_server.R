@@ -18,7 +18,10 @@ app_server <- function(input, output, session) {
     scatter_stats_plotly(data = parsed_bike_data,
                          datelim=input$Dates_scat,
                          station=input$stationID,
-                         add_trend=input$trend)
+                         moyenne_mobile=input$moyenne_mobile,
+                         moyenne_globale=input$moyenne_globale
+
+                         )
     })
 
   output$barplot_totals = renderPlotly({
@@ -28,10 +31,11 @@ app_server <- function(input, output, session) {
 
   output$plotly_loess = renderPlotly({
     loess_plotly(data = parsed_bike_data,
-                 stations=input$stationID_loess,
-                 datelim=input$Dates_loess,
+                 stations=input$stationID,
+                 datelim=input$Dates_scat,
                  add_similar=input$similar,
-                 add_trend=input$trend_trend)
+                 moyenne_mobile=FALSE,
+                 moyenne_globale=input$moyenne_globale)
   })
 
   output$mymap <- renderLeaflet({

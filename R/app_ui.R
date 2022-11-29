@@ -22,7 +22,7 @@ app_ui = function(request){
                         icon = icon("map-pin"),
                         mainPanel(h3('Localisation des stations de comptages de vélos sur les pistes cyclables'),
                                   width = 12,
-                                  leafletOutput("mymap",width = 1000, height=600)
+                                  leafletOutput("mymap",width = 1200, height=600)
                                   )
                ),
                tabPanel("Vélo",
@@ -37,28 +37,16 @@ app_ui = function(request){
                                     max = as.Date("2022-10-31","%Y-%m-%d"),
                                     value=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
                                     timeFormat="%Y-%m-%d"),
-                          checkboxInput("trend","Moyenne mobile", value = FALSE)
+                          checkboxInput("moyenne_mobile","Moyenne mobile", value = FALSE),
+                          checkboxInput("moyenne_globale","Moyenne globale", value = FALSE),
+                          checkboxInput("similar","Rajouter des stations similaires", value = FALSE)
                         )
                         ,
 
                         mainPanel(width = 9,"",
-                                  plotlyOutput("plotly_perstation")),
-               ),
+                                  plotlyOutput("plotly_perstation"),
+                                  plotlyOutput('plotly_loess',height = '500px'))
 
-               tabPanel("Tendance",
-                        icon = icon("bicycle"),
-                        sidebarPanel(width = 3,
-                          selectInput("stationID_loess", "Station:",
-                                      choices = as.list(parse_bike_data()[[3]]$Nom), selected = parse_bike_data()[[3]]$Nom[25]),
-                        sliderInput("Dates_loess",
-                                    "Date:",
-                                    min = as.Date("2020-01-01","%Y-%m-%d"),
-                                    max = as.Date("2022-10-31","%Y-%m-%d"),
-                                    value=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
-                                    timeFormat="%Y-%m-%d"),
-                        checkboxInput("trend_trend","Moyenne globale", value = FALSE),
-                        checkboxInput("similar","Rajouter des stations similaires", value = FALSE)),
-                        mainPanel(width = 9,"",plotlyOutput('plotly_loess')),
                ),
                tabPanel("Total",
                         icon = icon("bars"),

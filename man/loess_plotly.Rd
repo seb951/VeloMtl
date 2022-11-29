@@ -9,7 +9,8 @@ loess_plotly(
   stations = "Brébeuf / Rachel",
   datelim = c(as.Date("2020-01-01", "\%Y-\%m-\%d"), as.Date("2022-10-31", "\%Y-\%m-\%d")),
   add_similar = FALSE,
-  add_trend = FALSE,
+  moyenne_globale = FALSE,
+  moyenne_mobile = FALSE,
   plot_colors = default_colors(default = F)
 )
 }
