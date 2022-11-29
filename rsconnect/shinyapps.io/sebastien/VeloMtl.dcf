@@ -4,10 +4,10 @@ username:
 account: sebastien
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
-appId: 7751354
-bundleId: 6564087
+appId: 7752290
+bundleId: 6564330
 url: https://sebastien.shinyapps.io/velomtl/
-when: 1669665209.90944
-lastSyncTime: 1669665209.90947
+when: 1669669493.99835
+lastSyncTime: 1669669493.99837
 asMultiple: FALSE
 asStatic: FALSE

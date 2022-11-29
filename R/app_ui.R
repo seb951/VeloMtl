@@ -15,11 +15,12 @@ app_ui = function(request){
   tagList(
     golem_add_external_resources(),
     navbarPage(title = "Montréal - statistiques vélo",
+
                theme = shinytheme("darkly"),
 
                tabPanel("Localisation",
                         icon = icon("map-pin"),
-                        mainPanel("",
+                        mainPanel(h3('Localisation des stations de comptages de vélos sur les pistes cyclables'),
                                   width = 12,
                                   leafletOutput("mymap",width = 1000, height=600)
                                   )
@@ -28,7 +29,7 @@ app_ui = function(request){
                         icon = icon("bicycle"),
                         sidebarPanel(width = 3,
                           selectInput("stationID", "Station:",
-                                      choices = as.list(parse_bike_data()[[3]]$Nom), selected = parse_bike_data()[[3]]$Nom[4]),
+                                      choices = as.list(parse_bike_data()[[3]]$Nom), selected = parse_bike_data()[[3]]$Nom[25]),
 
                            sliderInput("Dates_scat",
                                     "Date:",
@@ -36,7 +37,7 @@ app_ui = function(request){
                                     max = as.Date("2022-10-31","%Y-%m-%d"),
                                     value=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
                                     timeFormat="%Y-%m-%d"),
-                          checkboxInput("trend","Moyenne", value = FALSE)
+                          checkboxInput("trend","Moyenne mobile", value = FALSE)
                         )
                         ,
 
@@ -48,14 +49,14 @@ app_ui = function(request){
                         icon = icon("bicycle"),
                         sidebarPanel(width = 3,
                           selectInput("stationID_loess", "Station:",
-                                      choices = as.list(parse_bike_data()[[3]]$Nom), selected = parse_bike_data()[[3]]$Nom[4]),
+                                      choices = as.list(parse_bike_data()[[3]]$Nom), selected = parse_bike_data()[[3]]$Nom[25]),
                         sliderInput("Dates_loess",
                                     "Date:",
                                     min = as.Date("2020-01-01","%Y-%m-%d"),
                                     max = as.Date("2022-10-31","%Y-%m-%d"),
                                     value=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
                                     timeFormat="%Y-%m-%d"),
-                        checkboxInput("trend_trend","Moyenne", value = FALSE),
+                        checkboxInput("trend_trend","Moyenne globale", value = FALSE),
                         checkboxInput("similar","Rajouter des stations similaires", value = FALSE)),
                         mainPanel(width = 9,"",plotlyOutput('plotly_loess')),
                ),

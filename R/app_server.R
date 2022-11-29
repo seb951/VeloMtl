@@ -48,10 +48,15 @@ output$mymap2 = renderPlot({dummy_plot()})
 
   output$general =
     output$clinical <- renderUI({
-      para7 <- "J'utilise les données d'ici:données publiques disponibles sur la plateforme de <a href='https://www.donneesquebec.ca/recherche/dataset/vmtl-velos-comptage'> données québec</a>. Les données sont préparées et formattées localement
-      afin d'augmenter la rapidité de l'interface utilisateur.
+      para7 <- "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;J'utilise les données publiques disponibles sur la plateforme de <i>données québec</i>.
+      Ces données sont obtenues grâce à des boucles magnétiques réparties sur des sites de comptage (pistes cyclables)
+      repartis à travers l'ile de Montréal. Pour plus d'informations, consulter le site d de
+      <a href='https://www.donneesquebec.ca/recherche/dataset/vmtl-velos-comptage'>données québec</a>.  Les données ont étés téléchargées et formattées localement
+      afin d'augmenter la rapidité des requêtes dans l'interface utilisateur.
         <br/><br/>
-      sebastien.renaut@gmail.com --- 2022"
+      sebastien.renaut@gmail.com --- 2022
+         <br/><br/>
+      License --- CC-BY 4.0"
       HTML(para7)
     })
 

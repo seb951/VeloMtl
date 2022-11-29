@@ -1,20 +1,24 @@
 
-#library(lubridate)
-#library(dplyr)
-#library(wesanderson)
-#library(plotly)
-#library(leaflet)
+library(lubridate)
+library(dplyr)
+library(wesanderson)
+library(plotly)
+library(leaflet)
 
 
-
+#' default colors
+#'
+#' default colors
+#' @return data
+#' @examples
+#' eg = default_colors();
+#' @export
 default_colors = function(default = T){
   if(default==F){
-    default_colors = c(wes_palettes$GrandBudapest1,wes_palettes$GrandBudapest2,wes_palettes$Zissou1,wes_palettes$Rushmore)
-  }
-
-    ###
+    default_colors = unlist(wes_palettes)[-c(3,4,10,12,17,18,19,20,21,22,29,30,35,36,40,41,48,49,51,54,5,56,59,64,66,67,68,69,70,71,76,83,85,87,89,91,92)]
+    names(default_colors)=NULL}###
   if(default==T){
-    default_colors = colors()[1:18]
+    default_colors = colors()[1:55]
   }
   default_colors
 }
@@ -26,7 +30,7 @@ default_colors = function(default = T){
 #' read data
 #' @return data
 #' @examples
-#' eg = read_mesothelioma();
+#' eg = read_bike_data();
 #' @export
 read_bike_data = function(path = "data/",recalculate = F){
   if(file.exists(paste0(path,"comptage_summarised_2020_2022.csv")) == F | recalculate == T){
@@ -76,17 +80,41 @@ read_bike_data = function(path = "data/",recalculate = F){
 }
 
 
+#' read metadata
+#'
+#' read metadata
+#' @return metadata
+#' @examples
+#' eg = read_metadata();
+#' @export
 read_metadata = function(path = "data/"){
 meta = read.csv(paste0(path,"localisation_des_compteurs_velo.csv"))
 meta
 }
 
 
+
+
+
+#' parse bike data
+#'
+#' parse bike data
+#' @return parsed bike data
+#' @examples
+#' eg = parse_bike_data();
+#' @export
 parse_bike_data = function(path = "data/",recalculate = F){
   if((file.exists(paste0(path,"comptage_summarised_plotly_2020_2022.csv")) == F) | recalculate == T) {
   comptage_summarised = read_bike_data()
   meta = read_metadata()
 
+  meta$Nom[3]  = 'Berri'
+  meta$Nom[9]  = "Brébeuf / Rachel"
+  meta$Nom[12] = "René-Lévesque / Wolfe"
+  meta$Nom[15] = "Boyer / Rosemont"
+  meta$Nom[24] = "Viger / Saint-Urbain"
+  meta$Nom[35] = "Valois / la Fontaine"
+  meta$Nom[36] = "Souligny / Saint-Émile"
   meta$Nom[40] = "Notre-Dame Est / Bellerive "
   meta$Nom[45] = "16e Avenue / Bélanger"
   meta$Nom[44] = "Sainte-Croix / Du Collège"
@@ -184,12 +212,21 @@ parse_bike_data = function(path = "data/",recalculate = F){
 
 
 ####
+
+
+
+#' plotly barplot
+#'
+#' pplotly barplot
+#' @return plotly barplot
+#' @examples
+#' eg = barplotly_statistics();
+#' @export
 barplotly_statistics = function(bike_data = parsed_bike_data[[3]],
-                                datelim=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d"))
+                                datelim=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
+                                          plot_colors = default_colors(default = F)
                               ){
 
-
-  m <- list(b = 50,t = 50,pad = 4)
 
   plot_ly(
     x = signif(bike_data$sum,3),
@@ -197,24 +234,33 @@ barplotly_statistics = function(bike_data = parsed_bike_data[[3]],
     name = "Total",
     type = "bar",
     height = 1000,
-    color = bike_data$Nom
+    color = bike_data$Nom,
+    colors= plot_colors[order(parsed_bike_data[[3]]$Nom)]
   ) %>%
-    layout(yaxis = list(categoryorder = "total ascending",color = '#ffffff'),
+    layout(yaxis = list(categoryorder = "total ascending",color = '#ffffff',categoryorder = "array",categoryarray = bike_data$Nom),
            showlegend = FALSE,
            title = list(font= list(color='#ffffff'),text='Nombre de passages totaux (2020-2022)'),
            xaxis = list(title = 'Nombre de passages',color = '#ffffff'),
            paper_bgcolor="#222222",
            plot_bgcolor="#222222",
-           margin = m
+           margin =  list(b = 50,t = 50,pad = 4)
           )
 
 
 }
 
 
-#loess smooth
-loess_plotly <- function(data = parsed_bike_data,stations="Brébeuf / Rachel Brébeuf",
-                         datelim=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),add_similar=FALSE,add_trend=FALSE) {
+
+#' loess_plotly
+#'
+#' loess_plotly
+#' @return plotly
+#' @examples
+#' eg = loess_plotly();
+#' @export
+loess_plotly <- function(data = parsed_bike_data,stations="Brébeuf / Rachel",
+                         datelim=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
+                         add_similar=FALSE,add_trend=FALSE,plot_colors = default_colors(default = F)) {
 
   #get 2 stations before & after that look similar...
   if(add_similar){
@@ -225,10 +271,15 @@ loess_plotly <- function(data = parsed_bike_data,stations="Brébeuf / Rachel Br�
 
   station_id = data[[3]]$ID[c(similar_stations[1]:similar_stations[2])]
 
+  plotly_colors = plot_colors[c(similar_stations[1]:similar_stations[2])]
+
+
   }
 
   if(add_similar==F){
     station_id = data[[3]]$ID[data[[3]]$Nom %in% stations]
+
+    plotly_colors = plot_colors[data[[3]]$Nom %in% stations]
   }
 
   #datelim
@@ -236,7 +287,6 @@ loess_plotly <- function(data = parsed_bike_data,stations="Brébeuf / Rachel Br�
 
   #stations
   data_stations = data[[1]][data[[1]]$station %in% station_id, ]
-
 
   #simplify for quicker load of plot.
   #data_stations = data_stations[seq(1,nrow(data_stations),by = 7),]
@@ -255,11 +305,12 @@ if(add_trend){
                x = ~day_counts,
                y = ~loess_smooth,
                color = ~Nom,
+               colors = plotly_colors,
                text = ~Nom) %>%
   add_lines(hoverinfo = 'text') %>%
     add_trace(x = moyenne$day_counts,y = moyenne$loess_smooth,
               line=list(color='white',dash='dot'),
-              name = 'Moyenne',text = "Moyenne",color='black',mode = 'lines',hoverinfo = 'text') %>%
+              name = 'Moyenne globale',text = "Moyenne globale",color='black',mode = 'lines',hoverinfo = 'text') %>%
     layout(title = list(font= list(color='#ffffff'),text='Tendances'),
            yaxis = list(title = 'Nombre de passages',color = '#ffffff'),
            xaxis = list(title='Date',color = '#ffffff'),
@@ -284,6 +335,7 @@ if(add_trend){
                  x = ~day_counts,
                  y = ~loess_smooth,
                  color = ~Nom,
+                 colors = plotly_colors,
                  text = ~Nom) %>%
     add_lines(hoverinfo = 'text') %>%
     layout(title = list(font= list(color='#ffffff'),text='Tendances'),
@@ -308,13 +360,25 @@ if(add_trend){
 
 }
 
-####
-scatter_stats_plotly = function(data = parsed_bike_data,stations="Saint-Laurent/Bellechasse",
-                                datelim=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),add_trend=FALSE) {
+
+
+#' scatter_stats_plotly
+#'
+#' scatter_stats_plotly
+#' @return plotly
+#' @examples
+#' eg = scatter_stats_plotly();
+#' @export
+scatter_stats_plotly = function(data = parsed_bike_data,stations="Brébeuf / Rachel",
+                                datelim=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
+                                add_trend=FALSE,
+                                plot_colors = default_colors(default = F)) {
 
   station_id = data[[3]]$ID[data[[3]]$Nom %in% stations]
   data_plot = data[[1]][data[[1]]$station %in% station_id, ]
   data_plot = data_plot[data_plot$day_counts>=datelim[1] & data_plot$day_counts<=datelim[2],]
+
+  plotly_colors = plot_colors[data[[3]]$Nom %in% stations]
 
   m <- list(b = 50,t = 50,pad = 4)
 
@@ -326,17 +390,19 @@ scatter_stats_plotly = function(data = parsed_bike_data,stations="Saint-Laurent/
                x = ~day_counts,
                y = ~counts,
                type = "scatter",
+               color = ~Nom,
+               colors = plotly_colors,
           text =  ~paste("<b>Date: </b>", day_counts, '<br><b>Décompte:</b>', counts),
           hovertemplate = paste('%{text}<extra></extra>')) %>%
     add_trace(y = ~loess_smooth,  line=list(color='white',dash='dot'),
-              name = 'Moyenne',text = "Moyenne",mode = 'lines',hoverinfo = 'text') %>%
+              name = 'Moyenne mobile',text = "Moyenne mobile",mode = 'lines',hoverinfo = 'text') %>%
     layout(title = list(font= list(color='#ffffff'),text=paste0("Station ",stations)),
            xaxis = list(title = 'Date',color = '#ffffff'),
            yaxis = list(title = 'Nombre de passages',color = '#ffffff'),
            showlegend = FALSE,
            margin = m,
-           paper_bgcolor="222222",
-           plot_bgcolor="222222")
+           paper_bgcolor="#222222",
+           plot_bgcolor="#222222")
   }
 
   if(add_trend==F) {
@@ -345,6 +411,8 @@ scatter_stats_plotly = function(data = parsed_bike_data,stations="Saint-Laurent/
                   x = ~day_counts,
                   y = ~counts,
                   type = "scatter",
+                  color = ~Nom,
+                  colors = plotly_colors,
                   text =  ~paste("<b>Date: </b>", day_counts, '<br><b>Décompte:</b>', counts),
                   hovertemplate = paste('%{text}<extra></extra>')) %>%
       layout(title = list(font= list(color='#ffffff'),text=paste0("Station ",stations)),
@@ -360,6 +428,15 @@ scatter_stats_plotly = function(data = parsed_bike_data,stations="Saint-Laurent/
 
 }
 
+
+
+#' dummy hist
+#'
+#' dummy hist
+#' @return dummy
+#' @examples
+#' eg = dummy_plot();
+#' @export
 dummy_plot = function(){
   hist(rnorm(1000))
 
