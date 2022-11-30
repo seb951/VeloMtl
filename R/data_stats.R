@@ -76,30 +76,15 @@ barplotly_statistics = function(bike_data = parsed_bike_data[[3]],
 loess_plotly <- function(data = parsed_bike_data,
                          stations="Brébeuf / Rachel",
                          datelim=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
-                         add_similar=FALSE,
                          moyenne_globale = FALSE,
                          moyenne_mobile = FALSE,
                          plot_colors = default_colors(default = F)) {
 
-  #get 2 stations before & after that look similar...
-  if(add_similar){
-  rank = c(1:nrow(data[[3]]))[data[[3]]$Nom %in% stations]
-  similar_stations = c(rank-2,rank+2)
-  similar_stations[1] = ifelse(similar_stations[1]<1,1,similar_stations[1])
-  similar_stations[2] = ifelse(similar_stations[2]>nrow(data[[3]]),nrow(data[[3]]),similar_stations[2])
+  #get stations ID
+  station_id = data[[3]]$ID[data[[3]]$Nom %in% stations]
 
-  station_id = data[[3]]$ID[c(similar_stations[1]:similar_stations[2])]
-
-  plotly_colors = plot_colors[c(similar_stations[1]:similar_stations[2])]
-
-
-  }
-
-  if(add_similar==F){
-    station_id = data[[3]]$ID[data[[3]]$Nom %in% stations]
-
-    plotly_colors = plot_colors[data[[3]]$Nom %in% stations]
-  }
+  #colors
+  plotly_colors = plot_colors[data[[3]]$Nom %in% stations]
 
   #datelim
   data_plot = data[[1]][data[[1]]$day_counts>=datelim[1] & data[[1]]$day_counts<=datelim[2],]
@@ -109,9 +94,6 @@ loess_plotly <- function(data = parsed_bike_data,
 
   #moyenne globale
   moyenne = data_plot[data_plot$station %in% 1e+08,]
-
-
-  m <- list(b = 150,t = 50,pad = 4)
 
   fig = plot_ly(data = data_stations,
                x = ~day_counts,
@@ -131,7 +113,7 @@ loess_plotly <- function(data = parsed_bike_data,
     layout(title = list(font= list(color='#ffffff'),text='Moyennes Mobiles (par station)'),
            yaxis = list(title = 'Nombre de passages',color = '#ffffff'),
            xaxis = list(title='Date',color = '#ffffff'),
-           margin = m,
+           margin = list(b = 150,t = 50,pad = 4),
            paper_bgcolor="#222222",
            plot_bgcolor="#222222",
            legend= list(

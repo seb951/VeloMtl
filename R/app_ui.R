@@ -20,16 +20,16 @@ app_ui = function(request){
 
                tabPanel("Localisation",
                         icon = icon("map-pin"),
-                        mainPanel(h3('Localisation des stations de comptages de vélos sur les pistes cyclables'),
+                        mainPanel(h3('Localisation des stations de comptages'),
                                   width = 12,
                                   leafletOutput("mymap",width = 1200, height=600)
                                   )
                ),
-               tabPanel("Vélo",
+               tabPanel("Stations",
                         icon = icon("bicycle"),
                         sidebarPanel(width = 3,
                           selectInput("stationID", "Station:",
-                                      choices = as.list(parse_bike_data()[[3]]$Nom), selected = parse_bike_data()[[3]]$Nom[25]),
+                                      choices = as.list(parse_bike_data()[[3]]$Nom), selected = parse_bike_data()[[3]]$Nom[1]),
 
                            sliderInput("Dates_scat",
                                     "Date:",
@@ -37,15 +37,36 @@ app_ui = function(request){
                                     max = as.Date("2022-10-31","%Y-%m-%d"),
                                     value=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
                                     timeFormat="%Y-%m-%d"),
-                          checkboxInput("moyenne_mobile","Moyenne mobile", value = FALSE),
-                          checkboxInput("moyenne_globale","Moyenne globale", value = FALSE),
-                          checkboxInput("similar","Rajouter des stations similaires", value = FALSE)
+                          br(),
+                          strong('Rajouter une moyenne:'),
+                          checkboxInput("moyenne_mobile","mobile", value = FALSE),
+                          checkboxInput("moyenne_globale","globale", value = FALSE)
+
                         )
                         ,
 
                         mainPanel(width = 9,"",
-                                  plotlyOutput("plotly_perstation"),
-                                  plotlyOutput('plotly_loess',height = '500px'))
+                                  plotlyOutput("plotly_perstation")),
+
+
+               ),
+               tabPanel("Tendances",
+                        icon = icon("chart-simple"),
+                        sidebarPanel(width =3,
+                                     sliderInput("Dates_loess",
+                                                 "Date:",
+                                                 min = as.Date("2020-01-01","%Y-%m-%d"),
+                                                 max = as.Date("2022-10-31","%Y-%m-%d"),
+                                                 value=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
+                                                 timeFormat="%Y-%m-%d"),
+                                     br(),
+                                     strong("Rajouter une moyenne:"),
+                                     checkboxInput("moyenne_globale_loess","globale", value = FALSE),
+                                     br(),
+                                     checkboxGroupInput("Stations_loess","Stations:",choices = parse_bike_data()[[3]]$Nom,selected = "Saint-Laurent/Bellechasse"),
+                        ),
+                        mainPanel(width = 9,"",
+                                  plotlyOutput('plotly_loess',height = '500px')),
 
                ),
                tabPanel("Total",
@@ -55,7 +76,9 @@ app_ui = function(request){
                tabPanel("Information",
                         icon = icon("question"),
                         mainPanel(width =12,strong("Description générale"),
-                                  htmlOutput("general"))
+                                  htmlOutput("general")),
+                        mainPanel(width =12,strong("Méthodologie"),
+                                  htmlOutput("metho"))
                )
                )
                )

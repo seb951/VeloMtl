@@ -31,11 +31,10 @@ app_server <- function(input, output, session) {
 
   output$plotly_loess = renderPlotly({
     loess_plotly(data = parsed_bike_data,
-                 stations=input$stationID,
-                 datelim=input$Dates_scat,
-                 add_similar=input$similar,
+                 stations=input$Stations_loess,
+                 datelim=input$Dates_loess,
                  moyenne_mobile=FALSE,
-                 moyenne_globale=input$moyenne_globale)
+                 moyenne_globale=input$moyenne_globale_loess)
   })
 
   output$mymap <- renderLeaflet({
@@ -50,19 +49,27 @@ app_server <- function(input, output, session) {
 output$mymap2 = renderPlot({dummy_plot()})
 
 
-  output$general =
-    output$clinical <- renderUI({
-      para7 <- "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;J'utilise les données publiques disponibles sur la plateforme de <i>données québec</i>.
+  output$general <- renderUI({
+      para <- "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;J'utilise les données publiques disponibles sur la plateforme de <i>données québec</i>.
       Ces données sont obtenues grâce à des boucles magnétiques réparties sur des sites de comptage (pistes cyclables)
       repartis à travers l'ile de Montréal. Pour plus d'informations, consulter le site d de
-      <a href='https://www.donneesquebec.ca/recherche/dataset/vmtl-velos-comptage'>données québec</a>.  Les données ont étés téléchargées et formattées localement
-      afin d'augmenter la rapidité des requêtes dans l'interface utilisateur.
+      <a href='https://www.donneesquebec.ca/recherche/dataset/vmtl-velos-comptage'>données québec</a>.
+      <br/><br/>"
+      HTML(para)
+    })
+
+  output$metho <- renderUI({
+    para <- "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Les données ont étés téléchargées et formattées localement
+      afin d'augmenter la rapidité des requêtes. Toutes les analyses sont réalisés à l'aide
+      du language <a href='https://cran.r-project.org/'>R version 4.2.1 </a>. Le tableau de bord est créé et déployé sur un
+      serveur public grâce à la
+      librairie <a href='https://shiny.rstudio.com/'>Shiny </a>.
+      Le code est disponible (CC-BY 4.0) sur un <a href='https://github.com/seb951/VeloMtl'>dépot public</a>.
         <br/><br/>
       sebastien.renaut@gmail.com --- 2022
-         <br/><br/>
-      License --- CC-BY 4.0"
-      HTML(para7)
-    })
+         <br/><br/>"
+    HTML(para)
+  })
 
 
 
