@@ -29,7 +29,7 @@ app_ui = function(request){
                         icon = icon("bicycle"),
                         sidebarPanel(width = 3,
                           selectInput("stationID", "Station:",
-                                      choices = as.list(parse_bike_data()[[3]]$Nom), selected = parse_bike_data()[[3]]$Nom[1]),
+                                      choices = as.list(parse_bike_data()[[3]]$Nom), selected = "Saint-Laurent/Bellechasse"),
 
                            sliderInput("Dates_scat",
                                     "Date:",

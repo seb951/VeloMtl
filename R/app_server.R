@@ -52,7 +52,7 @@ output$mymap2 = renderPlot({dummy_plot()})
   output$general <- renderUI({
       para <- "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;J'utilise les données publiques disponibles sur la plateforme de <i>données québec</i>.
       Ces données sont obtenues grâce à des boucles magnétiques réparties sur des sites de comptage (pistes cyclables)
-      repartis à travers l'ile de Montréal. Pour plus d'informations, consulter le site d de
+      repartis à travers l'ile de Montréal. Pour plus d'informations, consulter le site de
       <a href='https://www.donneesquebec.ca/recherche/dataset/vmtl-velos-comptage'>données québec</a>.
       <br/><br/>"
       HTML(para)
