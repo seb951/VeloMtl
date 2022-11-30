@@ -85,8 +85,9 @@ loess_plotly <- function(data = parsed_bike_data,
 
   #colors
   plotly_colors = plot_colors[data[[3]]$Nom %in% stations]
+  plotly_colors = plotly_colors[length(plotly_colors):1]
 
-  #datelim
+    #datelim
   data_plot = data[[1]][data[[1]]$day_counts>=datelim[1] & data[[1]]$day_counts<=datelim[2],]
 
   #stations
@@ -145,30 +146,14 @@ scatter_stats_plotly = function(data = parsed_bike_data,
                                 stations="Brébeuf / Rachel",
                                 datelim=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
                                 moyenne_globale=FALSE,
-                                add_similar = FALSE,
                                 moyenne_mobile = FALSE,
                                 plot_colors = default_colors(default = F)) {
 
 
   #get 2 stations before & after that look similar...
-  if(add_similar){
-    rank = c(1:nrow(data[[3]]))[data[[3]]$Nom %in% stations]
-    similar_stations = c(rank-2,rank+2)
-    similar_stations[1] = ifelse(similar_stations[1]<1,1,similar_stations[1])
-    similar_stations[2] = ifelse(similar_stations[2]>nrow(data[[3]]),nrow(data[[3]]),similar_stations[2])
+  station_id = data[[3]]$ID[data[[3]]$Nom %in% stations]
 
-    station_id = data[[3]]$ID[c(similar_stations[1]:similar_stations[2])]
-
-    plotly_colors = plot_colors[c(similar_stations[1]:similar_stations[2])]
-
-
-  }
-
-  if(add_similar==F){
-    station_id = data[[3]]$ID[data[[3]]$Nom %in% stations]
-
-    plotly_colors = plot_colors[data[[3]]$Nom %in% stations]
-  }
+  plotly_colors = plot_colors[data[[3]]$Nom %in% stations]
 
   #datelim
   data_plot = data[[1]][data[[1]]$day_counts>=datelim[1] & data[[1]]$day_counts<=datelim[2],]
