@@ -14,6 +14,7 @@ run_app <- function(
   uiPattern = "/",
   ...
 ) {
+  test_results = devtools::test(stop_on_failure=T)
   with_golem_options(
     app = shinyApp(
       ui = app_ui,
