@@ -1,7 +1,9 @@
 ## Overview  
-* vélo tableau de bord  
+* This is an interactive Shiny dashboard using biking stastitics in Montreal, Canada 
+
 
 ## Installation  
+install_github(seb95/VeloMtl)
 
 ## Basic Usage  
 ``` r
