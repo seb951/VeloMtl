@@ -6,6 +6,11 @@
 \usage{
 read_bike_data(path = "data/", recalculate = F)
 }
+\arguments{
+\item{recalculate}{logical. If you want to recalculate from the raw files..}
+
+\item{path.}{Where is the data?}
+}
 \value{
 data
 }

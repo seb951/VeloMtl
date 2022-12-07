@@ -8,32 +8,34 @@ library(leaflet)
 
 #' default colors
 #'
-#' default colors
-#' @return data
+#' This generate a vector of colors
+#' @return vector of colors
+#' @param default logical. R colors or from Wes Anderson movies.
+#' @param size int. number of colors you need.
 #' @examples
 #' eg = default_colors();
 #' @export
-default_colors = function(default = T){
+default_colors = function(default = T,size = 55){
   if(default==F){
     default_colors = unlist(wes_palettes)[-c(3,4,10,12,17,18,19,20,21,22,29,30,35,36,40,41,48,49,51,54,5,56,59,64,66,67,68,69,70,71,76,83,85,87,89,91,92)]
-    names(default_colors)=NULL}###
+    names(default_colors)=NULL
+    if(size<=55)default_colors = default_colors[1:size]
+    if(size>55) default_colors = default_colors[c(1:55,1:(size-55))]}
+  ###
   if(default==T){
-    default_colors = colors()[1:55]
+    default_colors = colors()[1:size]
   }
   default_colors
 }
 
 
-
-
-####
-
-
-
 #' plotly barplot
 #'
-#' pplotly barplot
+#' Create a plotly barplot for all stations
 #' @return plotly barplot
+#' @param bike_data dataframe.
+#' @param datelim date. dates
+#' @param plot_colors a vector of colors to look pretty
 #' @examples
 #' eg = barplotly_statistics();
 #' @export
@@ -41,9 +43,7 @@ barplotly_statistics = function(bike_data = parsed_bike_data[[3]],
                                 datelim=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
                                           plot_colors = default_colors(default = F)
                               ){
-
-
-  plot_ly(
+  fig = plot_ly(
     x = signif(bike_data$sum,3),
     y = bike_data$Nom,
     name = "Total",
@@ -60,16 +60,21 @@ barplotly_statistics = function(bike_data = parsed_bike_data[[3]],
            plot_bgcolor="#222222",
            margin =  list(b = 50,t = 50,pad = 4)
           )
-
-
+  fig
 }
 
 
 
 #' loess_plotly
 #'
-#' loess_plotly
-#' @return plotly
+#' create a line plot of smoothed average
+#' @return plotly line plot
+#' @param data list. input data from parse_bike_data(). A list of size 3.
+#' @param stations str. stations
+#' @param datelim date. dates
+#' @param moyenne_globale logical.
+#' @param moyenne_mobile logical.
+#' @param plot_colors a vector of colors to look pretty
 #' @examples
 #' eg = loess_plotly();
 #' @export
@@ -78,7 +83,8 @@ loess_plotly <- function(data = parsed_bike_data,
                          datelim=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
                          moyenne_globale = FALSE,
                          moyenne_mobile = FALSE,
-                         plot_colors = default_colors(default = F)) {
+                         plot_colors = default_colors(default = F)
+                         ) {
 
   #get stations ID
   station_id = data[[3]]$ID[data[[3]]$Nom %in% stations]
@@ -87,13 +93,13 @@ loess_plotly <- function(data = parsed_bike_data,
   plotly_colors = plot_colors[data[[3]]$Nom %in% stations]
   plotly_colors = plotly_colors[length(plotly_colors):1]
 
-    #datelim
+  #datelim
   data_plot = data[[1]][data[[1]]$day_counts>=datelim[1] & data[[1]]$day_counts<=datelim[2],]
 
   #stations
   data_stations = data_plot[data_plot$station %in% station_id, ]
 
-  #moyenne globale
+  #global average
   moyenne = data_plot[data_plot$station %in% 1e+08,]
 
   fig = plot_ly(data = data_stations,
@@ -104,13 +110,15 @@ loess_plotly <- function(data = parsed_bike_data,
                text = ~Nom) %>%
   add_lines(hoverinfo = 'text')
 
+  #add the global average
   if(moyenne_globale){
   fig = fig %>% add_trace(x = moyenne$day_counts,y = moyenne$loess_smooth,
               line=list(color='white',dash='dot'),
               name = 'Moyenne globale',text = "Moyenne globale (toutes les stations combinées)",color='black',mode = 'lines',hoverinfo = 'text')
   }
 
-    fig = fig %>%
+  #layout
+  fig = fig %>%
     layout(title = list(font= list(color='#ffffff'),text='Moyennes Mobiles (par station)'),
            yaxis = list(title = 'Nombre de passages',color = '#ffffff'),
            xaxis = list(title='Date',color = '#ffffff'),
@@ -128,17 +136,21 @@ loess_plotly <- function(data = parsed_bike_data,
              bordercolor = "#FFFFFF",
              borderwidth = 2)
            )
-
   fig
-
 }
 
 
 
 #' scatter_stats_plotly
 #'
-#' scatter_stats_plotly
-#' @return plotly
+#' create a scatter plot of counts per day
+#' @return a scatter plotly plot
+#' @param data input data from parse_bike_data(). A list of size 3.
+#' @param stations str. stations.
+#' @param datelim date. dates.
+#' @param moyenne_globale logical.
+#' @param moyenne_mobile logical.
+#' @param plot_colors a vector of colors to look pretty
 #' @examples
 #' eg = scatter_stats_plotly();
 #' @export
@@ -147,12 +159,14 @@ scatter_stats_plotly = function(data = parsed_bike_data,
                                 datelim=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
                                 moyenne_globale=FALSE,
                                 moyenne_mobile = FALSE,
-                                plot_colors = default_colors(default = F)) {
+                                plot_colors = default_colors(default = F)
+                                ) {
 
 
-  #get 2 stations before & after that look similar...
+  #stations ID
   station_id = data[[3]]$ID[data[[3]]$Nom %in% stations]
 
+  #colors
   plotly_colors = plot_colors[data[[3]]$Nom %in% stations]
 
   #datelim
@@ -161,11 +175,10 @@ scatter_stats_plotly = function(data = parsed_bike_data,
   #stations
   data_stations = data_plot[data_plot$station %in% station_id, ]
 
-  #moyenne
+  #average
   moyenne = data_plot[data_plot$station %in% 1e+08,]
 
 
-  fig = NULL
   fig = plot_ly(data = data_stations,
                x = ~day_counts,
                y = ~counts,
@@ -175,18 +188,20 @@ scatter_stats_plotly = function(data = parsed_bike_data,
           text =  ~paste("<b>Date: </b>", day_counts, '<br><b>Décompte:</b>', counts),
           hovertemplate = paste('%{text}<extra></extra>'))
 
+  #add smoothed average
   if(moyenne_mobile==T) {
     fig = fig %>% add_trace(y = ~loess_smooth,  line=list(color='yellow',dash='dot'),
               name = 'Moyenne mobile',text = paste0("Moyenne mobile (station: ",stations, ")"),mode = 'lines',hoverinfo = 'text')
   }
 
+  #add global average
   if(moyenne_globale==T){
     fig = fig %>% add_trace(x = moyenne$day_counts,y = moyenne$loess_smooth,
                             line=list(color='white',dash='dot'),
                             name = 'Moyenne globale',text = "Moyenne globale (toutes les stations combinées)",color='black',mode = 'lines',hoverinfo = 'text')
   }
 
-    fig = fig %>%
+  fig = fig %>%
     layout(title = list(font= list(color='#ffffff'),text=paste0("Station ",stations)),
            xaxis = list(title = 'Date',color = '#ffffff'),
            yaxis = list(title = 'Nombre de passages',color = '#ffffff'),
@@ -194,17 +209,15 @@ scatter_stats_plotly = function(data = parsed_bike_data,
            margin = list(b = 50,t = 50,pad = 4),
            paper_bgcolor="#222222",
            plot_bgcolor="#222222")
-
   fig
-
 }
 
 
 
 #' dummy hist
 #'
-#' dummy hist
-#' @return dummy
+#' this is a dummy plot to use as placeholder in the dashboard.
+#' @return histogram
 #' @examples
 #' eg = dummy_plot();
 #' @export

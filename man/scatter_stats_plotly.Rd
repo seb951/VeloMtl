@@ -13,11 +13,24 @@ scatter_stats_plotly(
   plot_colors = default_colors(default = F)
 )
 }
+\arguments{
+\item{data}{input data from parse_bike_data(). A list of size 3.}
+
+\item{stations}{str. stations.}
+
+\item{datelim}{date. dates.}
+
+\item{moyenne_globale}{logical.}
+
+\item{moyenne_mobile}{logical.}
+
+\item{plot_colors}{a vector of colors to look pretty}
+}
 \value{
-plotly
+a scatter plotly plot
 }
 \description{
-scatter_stats_plotly
+create a scatter plot of counts per day
 }
 \examples{
 eg = scatter_stats_plotly();

@@ -18,7 +18,7 @@ test_that("dummy true", {
 })
 
 test_that("dummy false", {
-  expect_equal(2 * 3, 4)
+  expect_false((2 * 3)==4)
 })
 
 

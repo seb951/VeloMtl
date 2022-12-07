@@ -13,11 +13,24 @@ loess_plotly(
   plot_colors = default_colors(default = F)
 )
 }
+\arguments{
+\item{data}{list. input data from parse_bike_data(). A list of size 3.}
+
+\item{stations}{str. stations}
+
+\item{datelim}{date. dates}
+
+\item{moyenne_globale}{logical.}
+
+\item{moyenne_mobile}{logical.}
+
+\item{plot_colors}{a vector of colors to look pretty}
+}
 \value{
-plotly
+plotly line plot
 }
 \description{
-loess_plotly
+create a line plot of smoothed average
 }
 \examples{
 eg = loess_plotly();
