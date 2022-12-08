@@ -1,4 +1,6 @@
 .Rproj.user
+.VeloMtl.Rproj
+.Rhistory
 data/raw.zip
 data/comptage_summarised_2020_2022.csv
 data/localisation_des_compteurs_velo.csv
