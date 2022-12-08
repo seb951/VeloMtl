@@ -1,0 +1,7 @@
+.Rproj.user
+data/raw.zip
+data/comptage_summarised_2020_2022.csv
+data/localisation_des_compteurs_velo.csv
+dev/01_start.R
+dev/02_dev.R
+dev/03_deploy.R

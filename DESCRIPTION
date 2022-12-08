@@ -1,5 +1,5 @@
 Package: VeloMtl
-Title: An Amazing Shiny App
+Title: A Shiny App of biking statistics in Montreal, Canada
 Version: 0.9
 Authors@R: 
     person("Sebastien", "Renaut", , "sebastien.renaut@email.com", role = c("aut", "cre"))

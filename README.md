@@ -1,9 +1,9 @@
 ## Overview  
-* This is an interactive Shiny dashboard using biking stastitics in Montreal, Canada 
+* This is an interactive Shiny dashboard using biking statistics in Montreal, Canada. 
 
 
 ## Installation  
-install_github(seb95/VeloMtl)
+devtools::install_github(seb95/VeloMtl)
 
 ## Basic Usage  
 ``` r
