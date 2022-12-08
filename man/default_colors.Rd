@@ -4,13 +4,18 @@
 \alias{default_colors}
 \title{default colors}
 \usage{
-default_colors(default = T)
+default_colors(default = T, size = 55)
+}
+\arguments{
+\item{default}{logical. R colors or from Wes Anderson movies.}
+
+\item{size}{int. number of colors you need.}
 }
 \value{
-data
+vector of colors
 }
 \description{
-default colors
+This generate a vector of colors
 }
 \examples{
 eg = default_colors();

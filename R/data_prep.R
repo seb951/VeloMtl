@@ -10,6 +10,8 @@ library(leaflet)
 #'
 #' read data
 #' @return data
+#' @param recalculate logical. If you want to recalculate from the raw files..
+#' @param path. Where is the data?
 #' @examples
 #' eg = read_bike_data();
 #' @export
@@ -25,7 +27,7 @@ read_bike_data = function(path = "data/",recalculate = F){
 
     colnames(comptage_complet) = gsub("compteur_","",colnames(comptage_complet))
 
-    #july is a messy name for some reason
+    #July is a messy month for some reason
     july_messy = comptage_complet$Date[regexpr("juil. 2021",comptage_complet$Date)>0]
     july_messy = gsub("juil. 2021","2021-07",july_messy)
 
@@ -39,7 +41,7 @@ read_bike_data = function(path = "data/",recalculate = F){
 
     comptage_complet$Date[regexpr("juil. 2021",comptage_complet$Date)>0] = july_fixed
 
-    #some dates are missing seconds... LOL...
+    #some dates are missing seconds (LOL...)
     comptage_complet$Date = ifelse(regexpr(":[0-9]+:",comptage_complet[,1])>0,comptage_complet[,1],paste0(comptage_complet[,1],":00"))
 
     comptage_complet$Date = ymd_hms(comptage_complet$Date)
@@ -61,33 +63,19 @@ read_bike_data = function(path = "data/",recalculate = F){
 }
 
 
-#' read metadata
-#'
-#' read metadata
-#' @return metadata
-#' @examples
-#' eg = read_metadata();
-#' @export
-read_metadata = function(path = "data/"){
-  meta = read.csv(paste0(path,"localisation_des_compteurs_velo.csv"))
-  meta
-}
-
-
-
-
-
 #' parse bike data
 #'
 #' parse bike data
 #' @return parsed bike data
+#' @param path. Where is the data?
+#' @param recalculate logical. If you want to recalculate from the raw files.
 #' @examples
 #' eg = parse_bike_data();
 #' @export
 parse_bike_data = function(path = "data/",recalculate = F){
   if((file.exists(paste0(path,"comptage_summarised_plotly_2020_2022.csv")) == F) | recalculate == T) {
     comptage_summarised = read_bike_data()
-    meta = read_metadata()
+    meta = read.csv(paste0(path,"localisation_des_compteurs_velo.csv"))
 
     meta$Nom[3]  = 'Berri'
     meta$Nom[9]  = "Brébeuf / Rachel"
@@ -116,7 +104,7 @@ parse_bike_data = function(path = "data/",recalculate = F){
     comptage_summarised = data.frame(day_counts = comptage_summarised$day_counts,temp[,data_meta_match],check.names=F)
 
 
-    #labels for plots
+    #pretty labels for plots (map)
     meta_match$labels = paste0("<b>",
                                toupper(meta_match$Nom),
                                "</b><p>Statut: ",
@@ -137,7 +125,7 @@ parse_bike_data = function(path = "data/",recalculate = F){
     comptage_summarised_plotly = rbind(comptage_summarised_plotly,global_average)
 
 
-    #loess smooth
+    #loess smoothing
     loess_smooth = list()
 
     for(i in 2:ncol(comptage_summarised)){

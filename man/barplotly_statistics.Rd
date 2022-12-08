@@ -10,11 +10,18 @@ barplotly_statistics(
   plot_colors = default_colors(default = F)
 )
 }
+\arguments{
+\item{bike_data}{dataframe.}
+
+\item{datelim}{date. dates}
+
+\item{plot_colors}{a vector of colors to look pretty}
+}
 \value{
 plotly barplot
 }
 \description{
-pplotly barplot
+Create a plotly barplot for all stations
 }
 \examples{
 eg = barplotly_statistics();
