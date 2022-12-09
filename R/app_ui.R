@@ -9,6 +9,7 @@
 #' @import plotly
 #' @import leaflet
 #' @import shinythemes
+#' @import devtools
 #' @noRd
 
 app_ui = function(request){
@@ -33,9 +34,9 @@ app_ui = function(request){
 
                            sliderInput("Dates_scat",
                                     "Date:",
-                                    min = as.Date("2020-01-01","%Y-%m-%d"),
+                                    min = as.Date("2019-01-01","%Y-%m-%d"),
                                     max = as.Date("2022-10-31","%Y-%m-%d"),
-                                    value=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
+                                    value=c(as.Date("2019-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
                                     timeFormat="%Y-%m-%d"),
                           br(),
                           strong('Rajouter une moyenne:'),
@@ -55,9 +56,9 @@ app_ui = function(request){
                         sidebarPanel(width =3,
                                      sliderInput("Dates_loess",
                                                  "Date:",
-                                                 min = as.Date("2020-01-01","%Y-%m-%d"),
+                                                 min = as.Date("2019-01-01","%Y-%m-%d"),
                                                  max = as.Date("2022-10-31","%Y-%m-%d"),
-                                                 value=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
+                                                 value=c(as.Date("2019-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
                                                  timeFormat="%Y-%m-%d"),
                                      br(),
                                      strong("Rajouter une moyenne:"),
@@ -71,7 +72,14 @@ app_ui = function(request){
                ),
                tabPanel("Total",
                         icon = icon("bars"),
-                        mainPanel("",width =12,plotlyOutput('barplot_totals')),
+                        sidebarPanel(width =3,
+                                     radioButtons("Dates_bar","Années:",choices =  c("Max" = "",
+                                                                                     "2022" = "2022",
+                                                                                     "2021" = "2021",
+                                                                                     "2020" = "2020",
+                                                                                     "2019" = "2019")
+                                                  ,selected="")),
+                        mainPanel("",width = 9,plotlyOutput('barplot_totals')),
                ),
                tabPanel("Information",
                         icon = icon("question"),

@@ -7,7 +7,7 @@
 loess_plotly(
   data = parsed_bike_data,
   stations = "Brébeuf / Rachel",
-  datelim = c(as.Date("2020-01-01", "\%Y-\%m-\%d"), as.Date("2022-10-31", "\%Y-\%m-\%d")),
+  datelim = c(as.Date("2019-01-01", "\%Y-\%m-\%d"), as.Date("2022-10-31", "\%Y-\%m-\%d")),
   moyenne_globale = FALSE,
   moyenne_mobile = FALSE,
   plot_colors = default_colors(default = F)

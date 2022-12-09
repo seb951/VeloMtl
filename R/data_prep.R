@@ -16,15 +16,16 @@ library(leaflet)
 #' eg = read_bike_data();
 #' @export
 read_bike_data = function(path = "data/",recalculate = F){
-  if(file.exists(paste0(path,"comptage_summarised_2020_2022.csv")) == F | recalculate == T){
+  if(file.exists(paste0(path,"comptage_summarised_2019_2022.csv")) == F | recalculate == T){
 
-    comptage_files = list.files(path,pattern="comptage_velo_202",full.names = T)
+    comptage_files = list.files(paste0(path,"raw/"),pattern="comptage_velo_20",full.names = T)
 
     comptage_list = lapply(as.list(comptage_files),read.csv)
 
-    comptage_complet = merge(comptage_list[[1]],comptage_list[[2]],by = intersect(names(comptage_list[[1]]), names(comptage_list[[3]])),all =T)
-    comptage_complet = merge(comptage_complet,comptage_list[[3]],by = intersect(names(comptage_complet), names(comptage_list[[3]])),all =T)
-
+    comptage_complet = merge(comptage_list[[1]],comptage_list[[2]],by = intersect(names(comptage_list[[1]]), names(comptage_list[[4]])),all =T)
+    comptage_complet = merge(comptage_complet,comptage_list[[3]],by = intersect(names(comptage_complet), names(comptage_list[[4]])),all =T)
+    comptage_complet = merge(comptage_complet,comptage_list[[4]],by = intersect(names(comptage_complet), names(comptage_list[[4]])),all =T)
+    
     colnames(comptage_complet) = gsub("compteur_","",colnames(comptage_complet))
 
     #July is a messy month for some reason
@@ -48,14 +49,14 @@ read_bike_data = function(path = "data/",recalculate = F){
 
     comptage_summarised = comptage_complet %>% mutate(day_counts=floor_date(Date,unit= "day")) %>% group_by(day_counts) %>% summarise_at(colnames(comptage_complet)[-1],sum,na.rm=T)
 
-    write.csv(comptage_summarised,paste0(path,'comptage_summarised_2020_2022.csv'))
+    write.csv(comptage_summarised,paste0(path,'comptage_summarised_2019_2022.csv'))
 
-    comptage_summarised = read.csv(paste0(path,"comptage_summarised_2020_2022.csv"),row.names = 1,check.names = F)
+    comptage_summarised = read.csv(paste0(path,"comptage_summarised_2019_2022.csv"),row.names = 1,check.names = F)
     comptage_summarised$day_counts = ymd(comptage_summarised$day_counts)
   }
 
-  if(file.exists(paste0(path,"comptage_summarised_2020_2022.csv")) == T){
-    comptage_summarised = read.csv(paste0(path,"comptage_summarised_2020_2022.csv"),row.names = 1,check.names = F)
+  if(file.exists(paste0(path,"comptage_summarised_2019_2022.csv")) == T){
+    comptage_summarised = read.csv(paste0(path,"comptage_summarised_2019_2022.csv"),row.names = 1,check.names = F)
     comptage_summarised$day_counts = ymd(comptage_summarised$day_counts)
   }
 
@@ -73,7 +74,7 @@ read_bike_data = function(path = "data/",recalculate = F){
 #' eg = parse_bike_data();
 #' @export
 parse_bike_data = function(path = "data/",recalculate = F){
-  if((file.exists(paste0(path,"comptage_summarised_plotly_2020_2022.csv")) == F) | recalculate == T) {
+  if((file.exists(paste0(path,"comptage_summarised_plotly_2019_2022.csv")) == F) | recalculate == T) {
     comptage_summarised = read_bike_data()
     meta = read.csv(paste0(path,"localisation_des_compteurs_velo.csv"))
 
@@ -94,10 +95,17 @@ parse_bike_data = function(path = "data/",recalculate = F){
     data_meta_match = match(colnames(comptage_summarised)[-1],meta$ID)
     meta_match = meta[data_meta_match,]
 
-    #order metadata
+    #add sums
     meta_match$sum = apply(comptage_summarised[,-1],2,sum)
+    meta_match$sum2022 = apply(comptage_summarised[(comptage_summarised$day_counts >=as.Date("2022-01-01","%Y-%m-%d")) & (comptage_summarised$day_counts < as.Date("2023-01-01","%Y-%m-%d")) ,-1],2,sum)
+    meta_match$sum2021 = apply(comptage_summarised[(comptage_summarised$day_counts >=as.Date("2021-01-01","%Y-%m-%d")) & (comptage_summarised$day_counts < as.Date("2022-01-01","%Y-%m-%d")) ,-1],2,sum)
+    meta_match$sum2020 = apply(comptage_summarised[(comptage_summarised$day_counts >=as.Date("2020-01-01","%Y-%m-%d")) & (comptage_summarised$day_counts < as.Date("2021-01-01","%Y-%m-%d")) ,-1],2,sum)
+    meta_match$sum2019 = apply(comptage_summarised[(comptage_summarised$day_counts >=as.Date("2019-01-01","%Y-%m-%d")) & (comptage_summarised$day_counts < as.Date("2020-01-01","%Y-%m-%d")) ,-1],2,sum)
     meta_match = meta_match[order( meta_match$sum,decreasing=T),]
 
+    #remove test stations
+    meta_match = meta_match[regexpr("Test",meta_match$Nom)<0,]
+    
     #ordered count data
     temp = comptage_summarised[,-1]
     data_meta_match = match(meta_match$ID,colnames(comptage_summarised)[-1])
@@ -111,8 +119,15 @@ parse_bike_data = function(path = "data/",recalculate = F){
                                meta_match$Statut,
                                "</b><p>Année implanté: ",
                                meta_match$Annee_implante,
-                               "</b><p>Nombre de passages (2020-2022): ",
-                               ifelse(meta_match$sum >100000,paste0(signif((meta_match$sum )/1000000,3),"M"),meta_match$sum ))
+                               "</b><p>Nombre de passages (2019-2022): ",
+                               ifelse(meta_match$sum >100000,paste0(signif((meta_match$sum )/1000000,3),"M"),meta_match$sum ),
+                               "</b><p>Latitude: ",
+                               meta_match$Latitude,
+                               "</b><p>Longitude: ",
+                               meta_match$Longitude,
+                               "</b><p>ID: ",
+                               meta_match$ID
+                               )
 
 
     #prepare data for plotly/ggplot
@@ -121,7 +136,7 @@ parse_bike_data = function(path = "data/",recalculate = F){
     comptage_summarised_plotly$station = unlist(lapply(colnames(comptage_summarised)[-1],rep,nrow(comptage_summarised)))
     comptage_summarised_plotly$Nom = unlist(lapply(meta_match$Nom,rep,nrow(comptage_summarised)))
 
-    global_average= data.frame(day_counts=comptage_summarised[,1], counts = rowMeans(comptage_summarised[,-1]), station = 100000000, Nom = "Moyenne")
+    global_average= data.frame(day_counts=comptage_summarised[,1], counts = rowMeans(comptage_summarised[,-1]), station = 999, Nom = "Moyenne")
     comptage_summarised_plotly = rbind(comptage_summarised_plotly,global_average)
 
 
@@ -139,7 +154,6 @@ parse_bike_data = function(path = "data/",recalculate = F){
         loess10 <- loess(counts ~ index, data = compt_loess, span=0.10) # 10% smoothing span
         smoothed10 <- predict(loess10)
         loess_smooth[[i]] = smoothed10
-
       }
     }
 
@@ -148,29 +162,29 @@ parse_bike_data = function(path = "data/",recalculate = F){
     comptage_summarised_plotly$loess_smooth[comptage_summarised_plotly$loess_smooth<0] = 0
 
     #write/read outputs
-    write.csv(comptage_summarised,paste0(path,'parsed_comptage_summarised_2020_2022.csv'))
-    write.csv(comptage_summarised_plotly,paste0(path,'comptage_summarised_plotly_2020_2022.csv'))
+    write.csv(comptage_summarised,paste0(path,'parsed_comptage_summarised_2019_2022.csv'))
+    write.csv(comptage_summarised_plotly,paste0(path,'comptage_summarised_plotly_2019_2022.csv'))
     write.csv(meta_match,paste0(path,'parsed_localisation_des_compteurs_velo.csv'))
 
-    comptage_summarised = read.csv(paste0(path,"parsed_comptage_summarised_2020_2022.csv"),row.names = 1,check.names = F)
+    comptage_summarised = read.csv(paste0(path,"parsed_comptage_summarised_2019_2022.csv"),row.names = 1,check.names = F)
     comptage_summarised$day_counts = ymd(comptage_summarised$day_counts)
 
     meta = read.csv(paste0(path,"parsed_localisation_des_compteurs_velo.csv"))
 
-    comptage_summarised_plotly = read.csv(paste0(path,"comptage_summarised_plotly_2020_2022.csv"),row.names = 1,check.names = F)
+    comptage_summarised_plotly = read.csv(paste0(path,"comptage_summarised_plotly_2019_2022.csv"),row.names = 1,check.names = F)
     comptage_summarised_plotly$day_counts = ymd(comptage_summarised_plotly$day_counts)
     comptage_summarised_plotly$station = as.character(comptage_summarised_plotly$station)
 
     parsed_bike_data = list(comptage_summarised_plotly,comptage_summarised,meta)
   }
 
-  if(file.exists(paste0(path,"comptage_summarised_plotly_2020_2022.csv"))) {
-    comptage_summarised = read.csv(paste0(path,"parsed_comptage_summarised_2020_2022.csv"),row.names = 1,check.names = F)
+  if(file.exists(paste0(path,"comptage_summarised_plotly_2019_2022.csv"))) {
+    comptage_summarised = read.csv(paste0(path,"parsed_comptage_summarised_2019_2022.csv"),row.names = 1,check.names = F)
     comptage_summarised$day_counts = ymd(comptage_summarised$day_counts)
 
     meta = read.csv(paste0(path,"parsed_localisation_des_compteurs_velo.csv"))
 
-    comptage_summarised_plotly = read.csv(paste0(path,"comptage_summarised_plotly_2020_2022.csv"),row.names = 1,check.names = F)
+    comptage_summarised_plotly = read.csv(paste0(path,"comptage_summarised_plotly_2019_2022.csv"),row.names = 1,check.names = F)
     comptage_summarised_plotly$day_counts = ymd(comptage_summarised_plotly$day_counts)
     comptage_summarised_plotly$station = as.character(comptage_summarised_plotly$station)
 

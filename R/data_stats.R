@@ -40,11 +40,12 @@ default_colors = function(default = T,size = 55){
 #' eg = barplotly_statistics();
 #' @export
 barplotly_statistics = function(bike_data = parsed_bike_data[[3]],
-                                datelim=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
+                                datelim="",
                                           plot_colors = default_colors(default = F)
                               ){
+ 
   fig = plot_ly(
-    x = signif(bike_data$sum,3),
+    x = signif(bike_data[,colnames(bike_data) == paste0('sum',datelim)],3),
     y = bike_data$Nom,
     name = "Total",
     type = "bar",
@@ -54,7 +55,7 @@ barplotly_statistics = function(bike_data = parsed_bike_data[[3]],
   ) %>%
     layout(yaxis = list(categoryorder = "total ascending",color = '#ffffff',categoryorder = "array",categoryarray = bike_data$Nom),
            showlegend = FALSE,
-           title = list(font= list(color='#ffffff'),text='Nombre de passages totaux (2020-2022)'),
+           title = list(font= list(color='#ffffff'),text = paste0("Nombre de passages total (",ifelse(datelim=="","2019-2022",datelim),")")),
            xaxis = list(title = 'Nombre de passages',color = '#ffffff'),
            paper_bgcolor="#222222",
            plot_bgcolor="#222222",
@@ -80,7 +81,7 @@ barplotly_statistics = function(bike_data = parsed_bike_data[[3]],
 #' @export
 loess_plotly <- function(data = parsed_bike_data,
                          stations="Brébeuf / Rachel",
-                         datelim=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
+                         datelim=c(as.Date("2019-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
                          moyenne_globale = FALSE,
                          moyenne_mobile = FALSE,
                          plot_colors = default_colors(default = F)
@@ -100,7 +101,7 @@ loess_plotly <- function(data = parsed_bike_data,
   data_stations = data_plot[data_plot$station %in% station_id, ]
 
   #global average
-  moyenne = data_plot[data_plot$station %in% 1e+08,]
+  moyenne = data_plot[data_plot$station %in% 999,]
 
   fig = plot_ly(data = data_stations,
                x = ~day_counts,
@@ -176,7 +177,7 @@ scatter_stats_plotly = function(data = parsed_bike_data,
   data_stations = data_plot[data_plot$station %in% station_id, ]
 
   #average
-  moyenne = data_plot[data_plot$station %in% 1e+08,]
+  moyenne = data_plot[data_plot$station %in% 999,]
 
 
   fig = plot_ly(data = data_stations,

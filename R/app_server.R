@@ -8,6 +8,7 @@
 #' @import wesanderson
 #' @import plotly
 #' @import leaflet
+#' @import devtools
 #' @noRd
 
 app_server <- function(input, output, session) {

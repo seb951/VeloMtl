@@ -1,24 +1,26 @@
 Package: VeloMtl
-Title: A Shiny App of biking statistics in Montreal, Canada
-Version: 0.9
+Title: VeloMtl
+Version: 0.0.0.9000
 Authors@R: 
-    person("Sebastien", "Renaut", , "sebastien.renaut@email.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-License: CC-BY 4.0
+    person("Sébastien", "Renaut", , "sebastien.renaut@gmail.com", role = c("cre", "aut"))
+Description: Statistiques de velo à Montréal, Qc
+License: CC BY 4.0
+URL: https://github.com/seb951/VeloMtl
+BugReports: https://github.com/seb951/VeloMtl/issues
 Imports: 
     config (>= 0.3.1),
+    devtools,
     dplyr,
     golem (>= 0.3.5),
     leaflet,
     lubridate,
-    pkgload,
     plotly,
     shiny (>= 1.7.2),
     shinythemes,
     wesanderson
-Encoding: UTF-8
-LazyData: true
-RoxygenNote: 7.2.2
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.2

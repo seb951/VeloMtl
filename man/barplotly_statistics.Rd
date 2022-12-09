@@ -6,7 +6,7 @@
 \usage{
 barplotly_statistics(
   bike_data = parsed_bike_data[[3]],
-  datelim = c(as.Date("2020-01-01", "\%Y-\%m-\%d"), as.Date("2022-10-31", "\%Y-\%m-\%d")),
+  datelim = "",
   plot_colors = default_colors(default = F)
 )
 }
