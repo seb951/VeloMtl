@@ -11,7 +11,7 @@ library(leaflet)
 #' read data
 #' @return data
 #' @param recalculate logical. If you want to recalculate from the raw files..
-#' @param path. Where is the data?
+#' @param path Where is the data?
 #' @examples
 #' eg = read_bike_data();
 #' @export
@@ -68,7 +68,7 @@ read_bike_data = function(path = "data/",recalculate = F){
 #'
 #' parse bike data
 #' @return parsed bike data
-#' @param path. Where is the data?
+#' @param path Where is the data?
 #' @param recalculate logical. If you want to recalculate from the raw files.
 #' @examples
 #' eg = parse_bike_data();

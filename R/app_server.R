@@ -18,7 +18,7 @@ app_server <- function(input, output, session) {
   output$plotly_perstation = renderPlotly({
     scatter_stats_plotly(data = parsed_bike_data,
                          datelim=input$Dates_scat,
-                         station=input$stationID,
+                         stations=input$stationID,
                          moyenne_mobile=input$moyenne_mobile,
                          moyenne_globale=input$moyenne_globale
 
