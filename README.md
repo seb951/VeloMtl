@@ -3,7 +3,11 @@
 
 
 ## Installation  
+* you can install it as a regulat R package.   
+* Data are actually pull from [here] (https://donnees.montreal.ca/ville-de-montreal/velos-comptage), but a local parsed copy already exists in the repo, so there is no need to upload them...
+``` r
 devtools::install_github(seb95/VeloMtl)
+```
 
 ## Basic Usage  
 ``` r
