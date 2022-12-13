@@ -45,7 +45,7 @@ barplotly_statistics = function(bike_data = parsed_bike_data[[3]],
                               ){
  
   fig = plot_ly(
-    x = signif(bike_data[,colnames(bike_data) == paste0('sum',datelim)],3),
+    x = bike_data[,colnames(bike_data) == paste0('sum',datelim)],
     y = bike_data$Nom,
     name = "Total",
     type = "bar",
