@@ -8,3 +8,4 @@ data/localisation_des_compteurs_velo.csv
 dev/01_start.R
 dev/02_dev.R
 dev/03_deploy.R
+*.R
