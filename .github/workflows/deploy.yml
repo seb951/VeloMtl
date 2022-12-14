@@ -29,11 +29,14 @@ jobs:
         uses: r-lib/actions/setup-r@f57f1301a053485946083d7a45022b278929a78a
         with:
           r-version: ${{ matrix.r-version }}
-      - name: Install dependencies
+      - name: deployment
+        env :
+          SHINY_SECRET : ${{ secrets.SHINY_SECRET }}
+          SHINY_TOKEN : ${{ secrets.SHINY_TOKEN }}
         run: |
           install.packages(c("rsconnect","devtools"))
           remotes::install_deps(dependencies = TRUE)
-        shell: Rscript {0}
-      - name: deployment
-        run: rsconnect::deployApp(launch.browser = FALSE,forceUpdate = TRUE)
+          var = as.list(Sys.getenv())
+          rsconnect::setAccountInfo(name="sebastien",token=var$SHINY_TOKEN,secret=var$SHINY_SECRET)
+          rsconnect::deployApp(launch.browser = FALSE,forceUpdate = TRUE)
         shell: Rscript {0}
