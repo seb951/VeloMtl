@@ -13,7 +13,7 @@
 
 app_server <- function(input, output, session) {
 
-  parsed_bike_data = parse_bike_data(recalculate = F)
+  parsed_bike_data = parse_bike_data(path = 'data/')
 
   output$plotly_perstation = renderPlotly({
     scatter_stats_plotly(data = parsed_bike_data,
@@ -26,7 +26,7 @@ app_server <- function(input, output, session) {
     })
 
   output$barplot_totals = renderPlotly({
-    barplotly_statistics(bike_data=parsed_bike_data[[3]],
+    barplotly_statistics(data=parsed_bike_data,
                        datelim=input$Dates_bar)
   })
 

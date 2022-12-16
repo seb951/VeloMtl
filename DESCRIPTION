@@ -3,7 +3,7 @@ Title: VeloMtl
 Version: 0.0.0.9000
 Authors@R: 
     person("Sébastien", "Renaut", , "sebastien.renaut@gmail.com", role = c("cre", "aut"))
-Description: Statistiques de velo à Montréal, Qc
+Description: Statistiques de vélo à Montréal, Qc. Biking statistics in Montreal Qc. An R shiny interactive dashboard for free! yay! 
 License: CC BY 4.0
 URL: https://github.com/seb951/VeloMtl
 BugReports: https://github.com/seb951/VeloMtl/issues

@@ -4,10 +4,10 @@
 \alias{read_bike_data}
 \title{read data}
 \usage{
-read_bike_data(path = "data/", recalculate = F)
+read_bike_data(path = "VeloMtl/data/", recalculate = F)
 }
 \arguments{
-\item{path}{Where is the data?}
+\item{path}{Where is the data stored?}
 
 \item{recalculate}{logical. If you want to recalculate from the raw files..}
 }
@@ -18,5 +18,5 @@ data
 read data
 }
 \examples{
-eg = read_bike_data();
+data = read_bike_data()
 }

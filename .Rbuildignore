@@ -7,3 +7,5 @@ $run_dev.*
 ^app\.R$
 ^rsconnect$
 ^LICENSE\.md$
+data/raw.zip
+data/raw/*

@@ -10,10 +10,10 @@ library(leaflet)
 #'
 #' This generate a vector of colors
 #' @return vector of colors
-#' @param default logical. R colors or from Wes Anderson movies.
+#' @param default logical. R color palette or palette based on Wes Anderson movies.
 #' @param size int. number of colors you need.
 #' @examples
-#' eg = default_colors();
+#' colors = default_colors()
 #' @export
 default_colors = function(default = T,size = 55){
   if(default==F){
@@ -29,31 +29,31 @@ default_colors = function(default = T,size = 55){
 }
 
 
-#' plotly barplot
+#' barplotly_statistics
 #'
-#' Create a plotly barplot for all stations
-#' @return plotly barplot
-#' @param bike_data dataframe.
+#' Create a bar plot for all stations
+#' @return plotly bar plot
+#' @param data list. input data from parse_bike_data(). A list of size 3.
 #' @param datelim date. dates
-#' @param plot_colors a vector of colors to look pretty
+#' @param plot_colors a vector of colors to look pretty.
 #' @examples
-#' eg = barplotly_statistics();
+#' fig = barplotly_statistics(data =list("a","b",data.frame(Nom=letters[1:10],sum=sample(1:10),ID = seq(1001,1010))) )
 #' @export
-barplotly_statistics = function(bike_data = parsed_bike_data[[3]],
-                                datelim="",
-                                          plot_colors = default_colors(default = F)
+barplotly_statistics = function(data = dummy_data(),
+                                datelim = "",
+                                plot_colors = default_colors(default = F)
                               ){
- 
+  meta = data[[3]]
   fig = plot_ly(
-    x = bike_data[,colnames(bike_data) == paste0('sum',datelim)],
-    y = bike_data$Nom,
+    x = meta[,colnames(meta) == paste0('sum',datelim)],
+    y = meta$Nom,
     name = "Total",
     type = "bar",
     height = 1000,
-    color = bike_data$Nom,
-    colors= plot_colors[order(bike_data$Nom)]
+    color = meta$Nom,
+    colors= plot_colors[order(meta$Nom)]
   ) %>%
-    layout(yaxis = list(categoryorder = "total ascending",color = '#ffffff',categoryorder = "array",categoryarray = bike_data$Nom),
+    layout(yaxis = list(categoryorder = "total ascending",color = '#ffffff',categoryorder = "array",categoryarray = meta$Nom),
            showlegend = FALSE,
            title = list(font= list(color='#ffffff'),text = paste0("Nombre de passages total (",ifelse(datelim=="","2019-2022",datelim),")")),
            xaxis = list(title = 'Nombre de passages',color = '#ffffff'),
@@ -77,11 +77,11 @@ barplotly_statistics = function(bike_data = parsed_bike_data[[3]],
 #' @param moyenne_mobile logical.
 #' @param plot_colors a vector of colors to look pretty
 #' @examples
-#' eg = loess_plotly();
+#' fig = loess_plotly()
 #' @export
-loess_plotly <- function(data = parsed_bike_data,
+loess_plotly <- function(data = dummy_data(),
                          stations="Brébeuf / Rachel",
-                         datelim=c(as.Date("2019-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
+                         datelim=c(as.Date("2019-01-01","%Y-%m-%d"),as.Date("2022-12-31","%Y-%m-%d")),
                          moyenne_globale = FALSE,
                          moyenne_mobile = FALSE,
                          plot_colors = default_colors(default = F)
@@ -153,11 +153,11 @@ loess_plotly <- function(data = parsed_bike_data,
 #' @param moyenne_mobile logical.
 #' @param plot_colors a vector of colors to look pretty
 #' @examples
-#' eg = scatter_stats_plotly();
+#' fig = scatter_stats_plotly()
 #' @export
-scatter_stats_plotly = function(data = parsed_bike_data,
+scatter_stats_plotly = function(data = dummy_data(),
                                 stations="Brébeuf / Rachel",
-                                datelim=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
+                                datelim=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-12-31","%Y-%m-%d")),
                                 moyenne_globale=FALSE,
                                 moyenne_mobile = FALSE,
                                 plot_colors = default_colors(default = F)
@@ -220,11 +220,10 @@ scatter_stats_plotly = function(data = parsed_bike_data,
 #' this is a dummy plot to use as placeholder in the dashboard.
 #' @return histogram
 #' @examples
-#' eg = dummy_plot();
+#' fig = dummy_plot()
 #' @export
 dummy_plot = function(){
   hist(rnorm(1000))
-
 }
 
 

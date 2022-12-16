@@ -5,9 +5,9 @@
 \title{loess_plotly}
 \usage{
 loess_plotly(
-  data = parsed_bike_data,
+  data = dummy_data(),
   stations = "Brébeuf / Rachel",
-  datelim = c(as.Date("2019-01-01", "\%Y-\%m-\%d"), as.Date("2022-10-31", "\%Y-\%m-\%d")),
+  datelim = c(as.Date("2019-01-01", "\%Y-\%m-\%d"), as.Date("2022-12-31", "\%Y-\%m-\%d")),
   moyenne_globale = FALSE,
   moyenne_mobile = FALSE,
   plot_colors = default_colors(default = F)
@@ -33,5 +33,5 @@ plotly line plot
 create a line plot of smoothed average
 }
 \examples{
-eg = loess_plotly();
+fig = loess_plotly()
 }
