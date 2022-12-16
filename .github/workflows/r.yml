@@ -36,6 +36,6 @@ jobs:
       - name: testthat checks
         run: devtools::test(stop_on_failure=T)
         shell: Rscript {0}
-      #- name: Check
-      #  run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
-      #  shell: Rscript {0}
+      - name: Check
+        run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
+        shell: Rscript {0}

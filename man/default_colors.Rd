@@ -7,7 +7,7 @@
 default_colors(default = T, size = 55)
 }
 \arguments{
-\item{default}{logical. R colors or from Wes Anderson movies.}
+\item{default}{logical. R color palette or palette based on Wes Anderson movies.}
 
 \item{size}{int. number of colors you need.}
 }
@@ -18,5 +18,5 @@ vector of colors
 This generate a vector of colors
 }
 \examples{
-eg = default_colors();
+colors = default_colors()
 }

@@ -2,6 +2,7 @@
 
 export(barplotly_statistics)
 export(default_colors)
+export(dummy_data)
 export(dummy_plot)
 export(loess_plotly)
 export(parse_bike_data)

@@ -2,27 +2,27 @@
 % Please edit documentation in R/data_stats.R
 \name{barplotly_statistics}
 \alias{barplotly_statistics}
-\title{plotly barplot}
+\title{barplotly_statistics}
 \usage{
 barplotly_statistics(
-  bike_data = parsed_bike_data[[3]],
+  data = dummy_data(),
   datelim = "",
   plot_colors = default_colors(default = F)
 )
 }
 \arguments{
-\item{bike_data}{dataframe.}
+\item{data}{list. input data from parse_bike_data(). A list of size 3.}
 
 \item{datelim}{date. dates}
 
-\item{plot_colors}{a vector of colors to look pretty}
+\item{plot_colors}{a vector of colors to look pretty.}
 }
 \value{
-plotly barplot
+plotly bar plot
 }
 \description{
-Create a plotly barplot for all stations
+Create a bar plot for all stations
 }
 \examples{
-eg = barplotly_statistics();
+fig = barplotly_statistics(data =list("a","b",data.frame(Nom=letters[1:10],sum=sample(1:10),ID = seq(1001,1010))) )
 }
