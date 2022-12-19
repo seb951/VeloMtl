@@ -4,12 +4,10 @@
 \alias{parse_bike_data}
 \title{parse bike data}
 \usage{
-parse_bike_data(path = "data/", recalculate = F)
+parse_bike_data(path = "VeloMtl/data/")
 }
 \arguments{
 \item{path}{Where is the data?}
-
-\item{recalculate}{logical. If you want to recalculate from the raw files.}
 }
 \value{
 parsed bike data
@@ -18,5 +16,5 @@ parsed bike data
 parse bike data
 }
 \examples{
-eg = parse_bike_data();
+parsed_bike_data = parse_bike_data()
 }

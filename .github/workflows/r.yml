@@ -31,11 +31,11 @@ jobs:
       - name: Install dependencies
         run: |
           install.packages(c("devtools"))
-          remotes::install_deps(dependencies = TRUE)
+          remotes::install_deps(dependencies = NA)
         shell: Rscript {0}
       - name: testthat checks
         run: devtools::test(stop_on_failure=T)
         shell: Rscript {0}
-      #- name: Check
-      #  run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
-      #  shell: Rscript {0}
+      - name: Check
+        run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
+        shell: Rscript {0}

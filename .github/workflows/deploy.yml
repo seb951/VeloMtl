@@ -35,7 +35,7 @@ jobs:
           SHINY_TOKEN : ${{ secrets.SHINY_TOKEN }}
         run: |
           install.packages(c("rsconnect","devtools"))
-          remotes::install_deps(dependencies = TRUE)
+          remotes::install_deps(dependencies = NA)
           var = as.list(Sys.getenv())
           rsconnect::setAccountInfo(name="sebastien",token=var$SHINY_TOKEN,secret=var$SHINY_SECRET)
           rsconnect::deployApp(launch.browser = FALSE,forceUpdate = TRUE)

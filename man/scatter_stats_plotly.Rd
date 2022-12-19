@@ -5,9 +5,9 @@
 \title{scatter_stats_plotly}
 \usage{
 scatter_stats_plotly(
-  data = parsed_bike_data,
+  data = dummy_data(),
   stations = "Brébeuf / Rachel",
-  datelim = c(as.Date("2020-01-01", "\%Y-\%m-\%d"), as.Date("2022-10-31", "\%Y-\%m-\%d")),
+  datelim = c(as.Date("2020-01-01", "\%Y-\%m-\%d"), as.Date("2022-12-31", "\%Y-\%m-\%d")),
   moyenne_globale = FALSE,
   moyenne_mobile = FALSE,
   plot_colors = default_colors(default = F)
@@ -33,5 +33,5 @@ a scatter plotly plot
 create a scatter plot of counts per day
 }
 \examples{
-eg = scatter_stats_plotly();
+fig = scatter_stats_plotly()
 }

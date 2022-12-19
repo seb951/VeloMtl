@@ -13,6 +13,7 @@
 #' @noRd
 
 app_ui = function(request){
+  choices = as.list(parse_bike_data(path = 'data/')[[3]]$Nom)
   tagList(
     golem_add_external_resources(),
     navbarPage(title = "Montréal - statistiques vélo",
@@ -31,13 +32,13 @@ app_ui = function(request){
                         icon = icon("bicycle"),
                         sidebarPanel(width = 3,
                           selectInput("stationID", "Station:",
-                                      choices = as.list(parse_bike_data()[[3]]$Nom), selected = "Saint-Laurent/Bellechasse"),
+                                      choices = choices, selected = "Saint-Laurent/Bellechasse"),
 
                            sliderInput("Dates_scat",
                                     "Date:",
                                     min = as.Date("2019-01-01","%Y-%m-%d"),
-                                    max = as.Date("2022-10-31","%Y-%m-%d"),
-                                    value=c(as.Date("2019-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
+                                    max = as.Date("2022-12-31","%Y-%m-%d"),
+                                    value=c(as.Date("2019-01-01","%Y-%m-%d"),as.Date("2022-12-31","%Y-%m-%d")),
                                     timeFormat="%Y-%m-%d"),
                           br(),
                           strong('Rajouter une moyenne:'),
@@ -58,14 +59,14 @@ app_ui = function(request){
                                      sliderInput("Dates_loess",
                                                  "Date:",
                                                  min = as.Date("2019-01-01","%Y-%m-%d"),
-                                                 max = as.Date("2022-10-31","%Y-%m-%d"),
-                                                 value=c(as.Date("2019-01-01","%Y-%m-%d"),as.Date("2022-10-31","%Y-%m-%d")),
+                                                 max = as.Date("2022-12-31","%Y-%m-%d"),
+                                                 value=c(as.Date("2019-01-01","%Y-%m-%d"),as.Date("2022-12-31","%Y-%m-%d")),
                                                  timeFormat="%Y-%m-%d"),
                                      br(),
                                      strong("Rajouter une moyenne:"),
                                      checkboxInput("moyenne_globale_loess","globale", value = FALSE),
                                      br(),
-                                     checkboxGroupInput("Stations_loess","Stations:",choices = parse_bike_data()[[3]]$Nom,selected = "Saint-Laurent/Bellechasse"),
+                                     checkboxGroupInput("Stations_loess","Stations:",choices = choices,selected = "Saint-Laurent/Bellechasse"),
                         ),
                         mainPanel(width = 9,"",
                                   plotlyOutput('plotly_loess',height = '500px')),

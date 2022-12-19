@@ -13,5 +13,5 @@ histogram
 this is a dummy plot to use as placeholder in the dashboard.
 }
 \examples{
-eg = dummy_plot();
+fig = dummy_plot()
 }
