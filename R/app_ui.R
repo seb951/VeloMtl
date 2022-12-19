@@ -22,8 +22,9 @@ app_ui = function(request){
 
                tabPanel("Localisation",
                         icon = icon("map-pin"),
-                        mainPanel(h3('Localisation des stations de comptages'),
-                                  width = 12,
+                        mainPanel(width =12,
+                                  h3("Description générale"),
+                                  htmlOutput("general"),
                                   leafletOutput("mymap",width = 1200, height=600)
                                   )
                ),
@@ -84,8 +85,6 @@ app_ui = function(request){
                ),
                tabPanel("Information",
                         icon = icon("question"),
-                        mainPanel(width =12,strong("Description générale"),
-                                  htmlOutput("general")),
                         mainPanel(width =12,strong("Méthodologie"),
                                   htmlOutput("metho"))
                )
