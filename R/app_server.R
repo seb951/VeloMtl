@@ -51,16 +51,19 @@ output$mymap2 = renderPlot({dummy_plot()})
 
 
   output$general <- renderUI({
-      para <- "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;J'utilise les données publiques disponibles sur la plateforme de <i>données québec</i>.
-      Ces données sont obtenues grâce à des boucles magnétiques réparties sur des sites de comptage (pistes cyclables)
-      repartis à travers l'ile de Montréal. Pour plus d'informations, consulter le site de
-      <a href='https://www.donneesquebec.ca/recherche/dataset/vmtl-velos-comptage'>données québec</a>.
+    para <- "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;J'utilise des statistiques sur le nombre de passages en vélo à Montréal en 2019-2022.
+      Ses données sont disponibles publiquement sur la plateforme de <a href='https://www.donneesquebec.ca/recherche/dataset/vmtl-velos-comptage'>données québec</a>.
+      Elles sont recueillies grâce à des boucles magnétiques sur des sites de comptage (pistes cyclables) réparties sur l'île de Montréal (56 sites de comptage et plus de 54 millions de passage).
       <br/><br/>"
-      HTML(para)
-    })
+    HTML(para)
+  })
 
   output$metho <- renderUI({
-    para <- "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Les données ont étés téléchargées et formattées localement
+    para <- "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;J'utilise des statistiques sur le nombre de passages en vélo à Montréal en 2019-2022.
+      Ses données sont disponibles publiquement sur la plateforme de <a href='https://www.donneesquebec.ca/recherche/dataset/vmtl-velos-comptage'>données québec</a>.
+      Elles sont recueillies grâce à des boucles magnétiques sur des sites de comptage (pistes cyclables) réparties sur l'île de Montréal (56 sites de comptage et plus de 54 millions de passage).
+      <br/><br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Les données ont été téléchargées et formatées localement
       afin d'augmenter la rapidité des requêtes. Toutes les analyses sont réalisés à l'aide
       du language <a href='https://cran.r-project.org/'>R version 4.2.1 </a>. Le tableau de bord est créé et déployé sur un
       serveur public grâce à la
