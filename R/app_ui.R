@@ -15,15 +15,16 @@
 app_ui = function(request){
   choices = as.list(parse_bike_data(path = 'data/')[[3]]$Nom)
   tagList(
+    actionButton("language", "En / Fr",class = "btn-success",
+                 style = "position: absolute; top: 8px; right: 7px; z-index:10000; font-size:80%;  border-color: #ad6415; background-color: #ad6415"),
     golem_add_external_resources(),
-    navbarPage(title = "Montréal - statistiques vélo",
+    navbarPage(title = htmlOutput("Montreal",inline=T),
 
                theme = shinytheme("darkly"),
 
-               tabPanel("Localisation",
+               tabPanel(htmlOutput("Localisation",inline = T),
                         icon = icon("map-pin"),
                         mainPanel(width =12,
-                                  h3("Description générale"),
                                   htmlOutput("general"),
                                   leafletOutput("mymap",width = 1200, height=600)
                                   )
@@ -41,9 +42,9 @@ app_ui = function(request){
                                     value=c(as.Date("2019-01-01","%Y-%m-%d"),as.Date("2022-12-31","%Y-%m-%d")),
                                     timeFormat="%Y-%m-%d"),
                           br(),
-                          strong('Rajouter une moyenne:'),
-                          checkboxInput("moyenne_mobile","mobile", value = FALSE),
-                          checkboxInput("moyenne_globale","globale", value = FALSE)
+                          strong(htmlOutput("add_average",inline = T)),
+                          checkboxInput("moyenne_mobile",htmlOutput("mobile",inline = T), value = FALSE),
+                          checkboxInput("moyenne_globale",htmlOutput("globale",inline = T), value = FALSE)
 
                         )
                         ,
@@ -53,7 +54,7 @@ app_ui = function(request){
 
 
                ),
-               tabPanel("Tendances",
+               tabPanel(htmlOutput("Tendances",inline=T),
                         icon = icon("chart-simple"),
                         sidebarPanel(width =3,
                                      sliderInput("Dates_loess",
@@ -63,8 +64,8 @@ app_ui = function(request){
                                                  value=c(as.Date("2019-01-01","%Y-%m-%d"),as.Date("2022-12-31","%Y-%m-%d")),
                                                  timeFormat="%Y-%m-%d"),
                                      br(),
-                                     strong("Rajouter une moyenne:"),
-                                     checkboxInput("moyenne_globale_loess","globale", value = FALSE),
+                                     strong(htmlOutput("add_average2",inline = T)),
+                                     checkboxInput("moyenne_globale_loess",htmlOutput("globale2",inline = T), value = FALSE),
                                      br(),
                                      checkboxGroupInput("Stations_loess","Stations:",choices = choices,selected = "Saint-Laurent/Bellechasse"),
                         ),
@@ -75,7 +76,7 @@ app_ui = function(request){
                tabPanel("Total",
                         icon = icon("bars"),
                         sidebarPanel(width =3,
-                                     radioButtons("Dates_bar","Années:",choices =  c("Max" = "",
+                                     radioButtons("Dates_bar",htmlOutput("year",inline = T),choices =  c("Max" = "",
                                                                                      "2022" = "2022",
                                                                                      "2021" = "2021",
                                                                                      "2020" = "2020",
@@ -85,7 +86,7 @@ app_ui = function(request){
                ),
                tabPanel("Information",
                         icon = icon("question"),
-                        mainPanel(width =12,strong("Méthodologie"),
+                        mainPanel(width =12,
                                   htmlOutput("metho"))
                )
                )

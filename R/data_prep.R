@@ -77,8 +77,6 @@ read_bike_data = function(path = "VeloMtl/data/",recalculate = F){
 parse_bike_data = function(path = "VeloMtl/data/"){
     comptage_summarised = read_bike_data(path = path)
 
-    #if(file.exists(paste0(path,"localisation_des_compteurs_velo.csv") == F)) {meta = readRDS(file = paste0(path,"localisation_des_compteurs_velo.rds"))}
-    #if(file.exists(paste0(path,"localisation_des_compteurs_velo.csv"))) {meta = read.csv(paste0(path,"localisation_des_compteurs_velo.csv"))}
     meta = readRDS(file = paste0(path,"localisation_des_compteurs_velo.rds"))    
     meta$Nom[3]  = 'Berri'
     meta$Nom[9]  = "Brébeuf / Rachel"
@@ -113,7 +111,7 @@ parse_bike_data = function(path = "VeloMtl/data/"){
     data_meta_match = match(meta_match$ID,colnames(temp))
     comptage_summarised = data.frame(day_counts = comptage_summarised$day_counts,temp[,data_meta_match],check.names=F)
 
-    #pretty labels for plots (map)
+    #pretty labels for plots (map) FRENCH
     meta_match$labels = paste0("<b>",
                                toupper(meta_match$Nom),
                                "</b><p>Statut: ",
@@ -129,6 +127,23 @@ parse_bike_data = function(path = "VeloMtl/data/"){
                                "</b><p>ID: ",
                                meta_match$ID
                                )
+    
+    #pretty labels for plots (map) FRENCH
+    meta_match$labels_en = paste0("<b>",
+                               toupper(meta_match$Nom),
+                               "</b><p>Status: ",
+                               meta_match$Statut,
+                               "</b><p>Year installed: ",
+                               meta_match$Annee_implante,
+                               "</b><p>Count Number (2019-2022): ",
+                               ifelse(meta_match$sum >100000,paste0(signif((meta_match$sum )/1000000,3),"M"),meta_match$sum ),
+                               "</b><p>Latitude: ",
+                               meta_match$Latitude,
+                               "</b><p>Longitude: ",
+                               meta_match$Longitude,
+                               "</b><p>ID: ",
+                               meta_match$ID
+    )
 
     #prepare data for plotly/ggplot
     comptage_summarised_plotly = data.frame(day_counts = rep(comptage_summarised$day_counts,ncol(comptage_summarised)-1))
@@ -175,13 +190,14 @@ parse_bike_data = function(path = "VeloMtl/data/"){
 #' @export
 dummy_data = function(){
   list(
-  data.frame(day_counts=c(rep(as.Date("2020-01-01","%Y-%m-%d"),10),rep(as.Date("2021-01-01","%Y-%m-%d"),10)),
-             station=rep(c(1001,1e+08),10),
-             counts = seq(1,20),
-             loess_smooth =seq(1,20),
-             Nom=rep(c('Boyer / Everett','moyenne'),10)),
-  data.frame(Nom=letters[1:10],sum=sample(1:10)),
-  data.frame(Nom=letters[1:10],sum=sample(1:10),ID = seq(1001,1010))
+  data.frame(day_counts=rep(seq(ymd('2020-09-01'),ymd('2022-04-19'),by='months'),2),
+             station=c(rep(1001,20),rep(999,20)),
+             counts = c(sample(5:20,20,replace = T),sample(15:30,20,replace = T)),
+             loess_smooth = c(seq(5,14.9,by = 0.5),seq(8,17.9,by = 0.5)),
+             Nom=c(rep('Boyer / Everett',20),rep('moyenne',20))
+  ),
+  data.frame(Nom=c('Boyer / Everett',letters[2:10]),sum=sample(1:10)),
+  data.frame(Nom=c('Boyer / Everett',letters[2:10]),sum=sample(1:10),ID = seq(1001,1010))
 )
 }
 
