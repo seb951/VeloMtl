@@ -31,12 +31,12 @@ test_that("barplotly_statistics works", {
 
 
 test_that("loess_plotly works", {
-  expect_true(all(class(loess_plotly(data = data_test,stations="Boyer / Everett"))==c("plotly","htmlwidget")))
+  expect_true(all(class(loess_plotly(data = data_test,moyenne_globale =T))==c("plotly","htmlwidget")))
 })
 
 
 test_that("scatter_stats_plotly works", {
-  expect_true(all(class(scatter_stats_plotly(data = data_test,stations="Boyer / Everett"))==c("plotly","htmlwidget")))
+  expect_true(all(class(scatter_stats_plotly(data = data_test,moyenne_mobile = T,moyenne_globale = T))==c("plotly","htmlwidget")))
 })
 
 

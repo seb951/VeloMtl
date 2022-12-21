@@ -6,11 +6,12 @@
 \usage{
 scatter_stats_plotly(
   data = dummy_data(),
-  stations = "Brébeuf / Rachel",
+  stations = "Boyer / Everett",
   datelim = c(as.Date("2020-01-01", "\%Y-\%m-\%d"), as.Date("2022-12-31", "\%Y-\%m-\%d")),
   moyenne_globale = FALSE,
   moyenne_mobile = FALSE,
-  plot_colors = default_colors(default = F)
+  plot_colors = default_colors(default = F, size = nrow(data[[3]])),
+  language = 0
 )
 }
 \arguments{

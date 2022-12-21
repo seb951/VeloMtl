@@ -41,7 +41,8 @@ default_colors = function(default = T,size = 55){
 #' @export
 barplotly_statistics = function(data = dummy_data(),
                                 datelim = "",
-                                plot_colors = default_colors(default = F)
+                                plot_colors = default_colors(default = F),
+                                language = 0
                               ){
   meta = data[[3]]
   fig = plot_ly(
@@ -55,8 +56,8 @@ barplotly_statistics = function(data = dummy_data(),
   ) %>%
     layout(yaxis = list(categoryorder = "total ascending",color = '#ffffff',categoryorder = "array",categoryarray = meta$Nom),
            showlegend = FALSE,
-           title = list(font= list(color='#ffffff'),text = paste0("Nombre de passages total (",ifelse(datelim=="","2019-2022",datelim),")")),
-           xaxis = list(title = 'Nombre de passages',color = '#ffffff'),
+           title = list(font= list(color='#ffffff'),text = paste0(ifelse(language %% 2 == 0,'Nombre de passages total (','Total Count Number ('),ifelse(datelim=="","2019-2022",datelim),")")),
+           xaxis = list(title = ifelse(language %% 2 == 0,'Nombre de passages','Count Numbers'),color = '#ffffff'),
            paper_bgcolor="#222222",
            plot_bgcolor="#222222",
            margin =  list(b = 50,t = 50,pad = 4)
@@ -80,11 +81,11 @@ barplotly_statistics = function(data = dummy_data(),
 #' fig = loess_plotly()
 #' @export
 loess_plotly <- function(data = dummy_data(),
-                         stations="Brébeuf / Rachel",
+                         stations='Boyer / Everett',
                          datelim=c(as.Date("2019-01-01","%Y-%m-%d"),as.Date("2022-12-31","%Y-%m-%d")),
                          moyenne_globale = FALSE,
-                         moyenne_mobile = FALSE,
-                         plot_colors = default_colors(default = F)
+                         plot_colors = default_colors(default = F,size = nrow(data[[3]])),
+                         language = 0
                          ) {
 
   #get stations ID
@@ -115,13 +116,13 @@ loess_plotly <- function(data = dummy_data(),
   if(moyenne_globale){
   fig = fig %>% add_trace(x = moyenne$day_counts,y = moyenne$loess_smooth,
               line=list(color='white',dash='dot'),
-              name = 'Moyenne globale',text = "Moyenne globale (toutes les stations combinées)",color='black',mode = 'lines',hoverinfo = 'text')
+              name = ifelse(language %% 2 == 0,'Moyenne globale','Global average'),text = ifelse(language %% 2 == 0,'Moyenne globale (toutes les stations combinées)','Global average (all stations combined)'),color='black',mode = 'lines',hoverinfo = 'text')
   }
 
   #layout
   fig = fig %>%
-    layout(title = list(font= list(color='#ffffff'),text='Moyennes Mobiles (par station)'),
-           yaxis = list(title = 'Nombre de passages',color = '#ffffff'),
+    layout(title = list(font= list(color='#ffffff'),text=ifelse(language %% 2 == 0,'Moyennes Mobiles (par station)','Smoothed average (per station)')),
+           yaxis = list(title = ifelse(language %% 2 == 0,'Nombre de passages','Count Numbers'),color = '#ffffff'),
            xaxis = list(title='Date',color = '#ffffff'),
            margin = list(b = 150,t = 50,pad = 4),
            paper_bgcolor="#222222",
@@ -156,11 +157,12 @@ loess_plotly <- function(data = dummy_data(),
 #' fig = scatter_stats_plotly()
 #' @export
 scatter_stats_plotly = function(data = dummy_data(),
-                                stations="Brébeuf / Rachel",
+                                stations='Boyer / Everett',
                                 datelim=c(as.Date("2020-01-01","%Y-%m-%d"),as.Date("2022-12-31","%Y-%m-%d")),
                                 moyenne_globale=FALSE,
-                                moyenne_mobile = FALSE,
-                                plot_colors = default_colors(default = F)
+                                moyenne_mobile=FALSE,
+                                plot_colors = default_colors(default = F,size = nrow(data[[3]])),
+                                language = 0
                                 ) {
 
 
@@ -186,32 +188,34 @@ scatter_stats_plotly = function(data = dummy_data(),
                type = "scatter",
                color = ~Nom,
                colors = plotly_colors,
-          text =  ~paste("<b>Date: </b>", day_counts, '<br><b>Décompte:</b>', counts),
-          hovertemplate = paste('%{text}<extra></extra>'))
+               text =  ~paste0("<b>Date: </b>", day_counts, '<br><b>',ifelse(language %% 2 == 0,"Décompte","Count"),': </b>', counts),
+               hovertemplate = paste('%{text}<extra></extra>')
+               )
 
   #add smoothed average
   if(moyenne_mobile==T) {
     fig = fig %>% add_trace(y = ~loess_smooth,  line=list(color='yellow',dash='dot'),
-              name = 'Moyenne mobile',text = paste0("Moyenne mobile (station: ",stations, ")"),mode = 'lines',hoverinfo = 'text')
+              name = ifelse(language %% 2 == 0,'Moyenne mobile',"Smoothed average"),text = paste0(ifelse(language %% 2 == 0,'Moyenne mobile (station: ','Smoothed average (station: '),stations, ")"),mode = 'lines',hoverinfo = 'text')
   }
 
   #add global average
   if(moyenne_globale==T){
     fig = fig %>% add_trace(x = moyenne$day_counts,y = moyenne$loess_smooth,
                             line=list(color='white',dash='dot'),
-                            name = 'Moyenne globale',text = "Moyenne globale (toutes les stations combinées)",color='black',mode = 'lines',hoverinfo = 'text')
+                            name = ifelse(language %% 2 == 0,'Moyenne globale',"Global average"),text = ifelse(language %% 2 == 0,'Moyenne globale (toutes les stations combinées)',"Globale average (all stations combined)") ,color='black',mode = 'lines',hoverinfo = 'text')
   }
 
   fig = fig %>%
     layout(title = list(font= list(color='#ffffff'),text=paste0("Station ",stations)),
            xaxis = list(title = 'Date',color = '#ffffff'),
-           yaxis = list(title = 'Nombre de passages',color = '#ffffff'),
+           yaxis = list(title = ifelse(language %% 2 == 0,'Nombre de passages',"Count number"),color = '#ffffff'),
            showlegend = FALSE,
            margin = list(b = 50,t = 50,pad = 4),
            paper_bgcolor="#222222",
            plot_bgcolor="#222222")
   fig
 }
+  
 
 
 

@@ -7,7 +7,8 @@
 barplotly_statistics(
   data = dummy_data(),
   datelim = "",
-  plot_colors = default_colors(default = F)
+  plot_colors = default_colors(default = F),
+  language = 0
 )
 }
 \arguments{
